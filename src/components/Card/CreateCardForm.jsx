@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import MathJax from 'react-mathjax-preview';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import history from '../../history';
-
+//halla
 
 import {getCards, setSelectedEquation} from '../../actions';
 import "./CreateCardForm.css";
