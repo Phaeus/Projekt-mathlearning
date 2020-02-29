@@ -38,6 +38,7 @@ class Login extends Component{
                     <Form>
                         <div className="ui input">
                     <Field
+                    autoFocus
                     name="username"
                     type="username"
                     placeholder="Username/Email"
