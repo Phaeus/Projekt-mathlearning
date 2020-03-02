@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Formik, Form, Field} from 'formik';
 
 import history from '../../history';
-import {createUser, checkAvailableUser} from '../../actions';
+import {createUser, checkAvailableUser, loginUser} from '../../actions';
 
 class Signin extends Component{
     constructor(props){
@@ -34,6 +34,8 @@ class Signin extends Component{
                     if(this.checkInput(values)){
                         console.log("Signed in successfully");
                         this.props.createUser({username: values.username, password:values.password});
+                        this.props.loginUser(values.username);
+                        
                         console.log(this.props.user);
                         history.goBack();
                     }
@@ -46,6 +48,7 @@ class Signin extends Component{
                     <Form>
                     <div className="ui input">
                     <Field
+                    autoFocus
                     name="username"
                     type="username"
                     placeholder="Username/Email"
@@ -82,7 +85,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
     createUser: createUser,
-    checkAvailableUser: checkAvailableUser
+    checkAvailableUser: checkAvailableUser,
+    loginUser: loginUser
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Signin)

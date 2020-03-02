@@ -115,6 +115,13 @@ export const getCollections = () => async dispatch => {
       })
   }
 
+  export const logoutUser = () => async dispatch => {
+      dispatch({
+          type:'LOGOUT_USER',
+          payload: []
+      })
+  }
+
   export const checkAvailableUser = (username) => async dispatch => {
       dispatch({
           type:'CHECK_AVAILABLE_USER',

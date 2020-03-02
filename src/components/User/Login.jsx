@@ -11,7 +11,6 @@ class Login extends Component{
         this.state ={}
     }  
 
-    //muss besser gemacht werden: vielleicht in dieser Datei?
     checkUser(values){
         this.props.checkUser(values.username, values.password);
         return this.props.user.loginSuccess;
@@ -46,9 +45,9 @@ class Login extends Component{
                     </div>
                     <div className="ui input">
                     <Field
-                    name="password"
-                    type="password"
-                    placeholder="Password"
+                        name="password"
+                        type="password"
+                        placeholder="Password"
                     />
                     </div>
                     <button className="ui button" type="submit">Log in</button>

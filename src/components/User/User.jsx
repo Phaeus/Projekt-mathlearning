@@ -1,8 +1,8 @@
 import React,{Component} from 'react';
 import {connect} from 'react-redux';
 
-import {getUser, getUserlist} from '../../actions';
-//import history from '../../history';
+import {getUser, getUserlist, logoutUser} from '../../actions';
+import history from '../../history';
 
 class User extends Component{
     constructor(props){
@@ -22,15 +22,20 @@ class User extends Component{
       }
 
     render(){
+        if(this.props.user.user === null){
+            return <div>Loading...</div>
+        }
+        else{
         return(
             <div>
                 {console.log(this.props.user)}
                 createdCollection:
                 {this.props.user.user.createdCollection}
                 {this.state.username}
-                Halllo
+                <button className="ui button" onClick={() => {this.props.logoutUser(); history.goBack()}}>Logout</button>
             </div>
         )
+        }
     }
 }
 
@@ -42,6 +47,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
     getUser:getUser,
-    getUserlist: getUserlist
+    getUserlist: getUserlist,
+    logoutUser
 };
 export default connect(mapStateToProps, mapDispatchToProps)(User)

@@ -45,19 +45,23 @@ export default(state = initialState, action) => {
         case "LOGIN_USER":
             const loggedInUsername = action.payload;
             const loggedInUser = state.userlist.find(user => user.username === loggedInUsername);
+            console.log(loggedInUser);
             return {...state, user:loggedInUser};
         
         case "GET_LOGIN_SUCCESS":
             return {...state, loginSuccess:state.loginSuccess}
+        
+        case "LOGOUT_USER":
+            return {...state, user:null, loginSuccess:false};
 
         case "CHECK_AVAILABLE_USER":
             const potUsername = action.payload.username;
             for (let i = 0; i < state.userlist.length; i++) {
                 if(potUsername === state.userlist[i].username){
-                    return {...state, usernameAvailable:false}
+                    return {...state, usernameAvailable:false, loginSuccess:false}
                 }
             }
-            return {...state, usernameAvailable:true}
+            return {...state, usernameAvailable:true, loginSuccess:true}
 
         case "ADD_PLAYED_COLLECTION":
             let userNew = {...state.user, playedCollection: action.payload};
