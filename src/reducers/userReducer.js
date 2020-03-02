@@ -1,6 +1,6 @@
 const initialState = {
     userlist: [
-        {username:"h", password:"h", id:0}
+        {username:"h", password:"h", createdCollection:[], id:0}
     ],
     user:null,
     loginSuccess:false,
@@ -26,7 +26,7 @@ export default(state = initialState, action) => {
                 }
             }
             console.log(action.payload)
-            const newUser = {...action.payload, id:idNew+1};
+            const newUser = {...action.payload, createdCollection:[], id:idNew+1};
             let newList = state.userlist;
             newList.push(newUser);
             return {...state, userlist:newList}
@@ -69,8 +69,11 @@ export default(state = initialState, action) => {
             }
             return {...state, userlist: userlistNew}
         case "ADD_CREATED_COLLECTION":
+            console.log(state.user)
+            let createdCollection = state.user.createdCollection;
             let neUser = state.userlist.find(user => user.id === state.user.id);
-            neUser = {...neUser, createdCollection: action.payload};
+            createdCollection.push(action.payload);
+            neUser = {...neUser, createdCollection: createdCollection};
             let newUserlist = state.userlist;
             for (let i = 0; i < newUserlist.length; i++) {
                 if(newUserlist[i].id === neUser.id){

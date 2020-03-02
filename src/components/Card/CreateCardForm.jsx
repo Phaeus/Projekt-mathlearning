@@ -239,9 +239,7 @@ class CreateCardForm extends Component {
                                     <MathJax math={"`"+this.state.cards.find(equa => equa.id === card.id).question+"`"} />  
                                 </div>
                                 )}
-                                
                               </div>
-                              
                               </div>
                               )}
                               </Draggable>

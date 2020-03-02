@@ -17,7 +17,6 @@ export default function CollectionConfig(props){
     const [randomChecked, setRandomChecked] = useState(false);
     const [timeChecked, setTimeChecked] = useState(false);
 
-    if(props.showConfig){
     return(
         <div className="ui segment" id="config-box">
             <div className="renditon">
@@ -34,7 +33,9 @@ export default function CollectionConfig(props){
                   <p>Chronological</p>
               )}
             </div>
-            <div className="ui divider"/>
+            {props.showConfig ? (
+                <div>
+                <div className="ui divider"/>
                 <div className="rendition-time">
                 <div className="random-label">
                     Rendition Time
@@ -60,14 +61,11 @@ export default function CollectionConfig(props){
                     </div>
                 )}
             </div>
+            </div>
+            ):(
+                <div/>
+            )}
+            
         </div>
         )
-    }
-    else{
-        return(
-            <div className="ui segment" id="config-box">
-
-            </div>
-        )
-    }
 }

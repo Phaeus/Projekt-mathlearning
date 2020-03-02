@@ -31,7 +31,8 @@ const initialState = {
           const newCollection = {...action.payload.collection, id:idNew+1, cardIdList:action.payload.cardIdList};
           let newList = state.collectionlist;
           newList.push(newCollection);
-          return { ...state, collectionlist:newList, lastCollectionId: idNew}
+          console.log(state)
+          return { ...state, collectionlist:newList, lastCollectionId: idNew+1}
       case 'GET_LAST_COLLECTION_ID':
         let lastId = 0;
         for(let i = 0; i<state.collectionlist.length; i++) {

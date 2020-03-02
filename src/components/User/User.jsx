@@ -25,6 +25,7 @@ class User extends Component{
         return(
             <div>
                 {console.log(this.props.user)}
+                createdCollection:
                 {this.props.user.user.createdCollection}
                 {this.state.username}
                 Halllo

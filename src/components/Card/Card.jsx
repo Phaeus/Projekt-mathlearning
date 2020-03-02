@@ -50,6 +50,17 @@ class Card extends Component {
     this.setState({cardCounter: this.state.cardCounter+1, time:this.state.time+1});
   }
   
+  renderBar = () => {
+    const {cards, cardCounter} = this.state;
+    if(cards[cardCounter].displayTime === 0){
+      return <div></div>
+    }
+    else{
+      return(
+        <Timebar time={cards[cardCounter].displayTime} id={cards[cardCounter].id} setCompleted={this.setCompleted} />
+      )
+    }
+  }
 
   render() {
     const {cards, cardCounter} = this.state;
@@ -65,7 +76,7 @@ class Card extends Component {
       return (
         <div className="ui container">
           <div>
-            <Timebar time={cards[cardCounter].displayTime} id={cards[cardCounter].id} setCompleted={this.setCompleted} />
+           {this.renderBar()} 
            {this.renderCard()}
            {console.log(this.state)}
            <button className="ui negative button" onClick={() => this.setState({cardCounter: cardCounter+1})}>NEXT</button>

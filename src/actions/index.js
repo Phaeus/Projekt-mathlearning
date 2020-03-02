@@ -129,7 +129,7 @@ export const getCollections = () => async dispatch => {
       })
   }
 
-  export const addCreatedCollection = (collectionId) => dispatch => {
+  export const addCreatedCollection = (collectionId) => async dispatch => {
       dispatch({
           type:'ADD_CREATED_COLLECTION',
           payload:collectionId
