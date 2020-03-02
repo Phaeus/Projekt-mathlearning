@@ -15,6 +15,9 @@ class Header extends Component {
     render(){
         return(
                 <div className="ui secondary pointing menu">
+                    <div className="left menu">
+                       <h1 className="item">Halla</h1>
+                    </div>
                     <div className="right menu">
                             {
                             this.props.user.loginSuccess ? (

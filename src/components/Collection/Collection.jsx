@@ -25,6 +25,7 @@ class Collection extends Component {
     this.setState({collectionId:id});
     this.props.getCollection(id);
   }
+  
 //https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
   orderCardIds = () => {
     const {randomOrderBool, cardIdList} = this.props.collections.collection;

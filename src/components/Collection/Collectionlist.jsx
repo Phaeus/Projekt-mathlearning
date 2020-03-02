@@ -24,10 +24,8 @@ class Collectionlist extends Component {
       return (
         collectionlist.map(collection => {
             return(
-                <div key={collection.id} className="ui segment">
-                <Link to={`/collections/${collection.id}`}>
+                <div key={collection.id} className="ui segment" id="collection" onClick={() => {history.push(`/collections/${collection.id}`)}}>
                   {collection.title}
-              </Link>
             </div>
             )
         }

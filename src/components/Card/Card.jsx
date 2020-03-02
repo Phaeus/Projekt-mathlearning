@@ -13,7 +13,12 @@ class Card extends Component {
       cards: null,
       cardCounter: 0,
       time:5,
+      currentAnswer:null,
+      answers:[]
     }
+
+    this.saveAnswer = this.saveAnswer.bind(this);
+    this.handleAnswerChange = this.handleAnswerChange.bind(this);
   }
   async componentDidMount() {
     if (this.props.cards.cardlist === null) {
@@ -35,6 +40,18 @@ class Card extends Component {
     this.setState({cards:cards});
   }
 
+  saveAnswer = () => {
+    let answers = this.state.answers;
+    answers.push(this.state.currentAnswer);
+    this.setState({answers});
+    console.log(this.state.answers)
+  }
+  
+  handleAnswerChange = (event) => {
+    event.preventDefault();
+    this.setState({currentAnswer:event.target.value});
+  }
+
   renderCard(){
     const {cards, cardCounter} = this.state;
     return(
@@ -42,16 +59,26 @@ class Card extends Component {
         <div className="card">
           {cards[cardCounter].question}
         </div>
+        <form onSubmit={this.saveAnswer}>
+          <div className="ui input">
+          <input
+            autoFocus
+            onChange={this.handleAnswerChange}
+          />
+          </div>
+        </form>
       </div>
     )
   }
 
   setCompleted = () => {
+    this.saveAnswer();
     this.setState({cardCounter: this.state.cardCounter+1, time:this.state.time+1});
   }
   
   renderBar = () => {
     const {cards, cardCounter} = this.state;
+
     if(cards[cardCounter].displayTime === 0){
       return <div></div>
     }
@@ -79,7 +106,7 @@ class Card extends Component {
            {this.renderBar()} 
            {this.renderCard()}
            {console.log(this.state)}
-           <button className="ui negative button" onClick={() => this.setState({cardCounter: cardCounter+1})}>NEXT</button>
+           <button className="ui negative button" onClick={() => {this.setState({cardCounter: cardCounter+1}, this.saveAnswer)}}>NEXT</button>
           </div>
         </div>
       );

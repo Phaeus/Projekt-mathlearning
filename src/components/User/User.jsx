@@ -11,6 +11,7 @@ class User extends Component{
             username:null
         }
     }
+    
     async componentDidMount() {
         if (this.props.user.userlist === null) {
           await this.props.getUserlist();
