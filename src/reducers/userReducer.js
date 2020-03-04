@@ -72,8 +72,8 @@ export default(state = initialState, action) => {
                 }
             }
             return {...state, userlist: userlistNew}
+        
         case "ADD_CREATED_COLLECTION":
-            console.log(state.user)
             let createdCollection = state.user.createdCollection;
             let neUser = state.userlist.find(user => user.id === state.user.id);
             createdCollection.push(action.payload);
@@ -84,7 +84,6 @@ export default(state = initialState, action) => {
                     newUserlist[i] = neUser;
                 }
             }
-            console.log("df",newUserlist)
             return {...state, userlist: newUserlist}
         default:
             return state;

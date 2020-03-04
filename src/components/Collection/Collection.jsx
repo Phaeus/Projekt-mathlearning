@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getCollection, getCollections } from '../../actions';
-import {Link} from 'react-router-dom';
 
 import history from '../../history';
 import Card from '../Card/Card';
@@ -27,6 +26,7 @@ class Collection extends Component {
   }
   
 //https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+
   orderCardIds = () => {
     const {randomOrderBool, cardIdList} = this.props.collections.collection;
     if(randomOrderBool){
@@ -55,7 +55,7 @@ class Collection extends Component {
     }
     else{
       return(
-        <Card cardIdList={this.state.cardIdList} id={this.state.collectionId} />
+        <Card cardIdList={this.state.cardIdList} id={this.state.collectionId} cardCounter={this.state.cardCounter}/>
       )
     }
     }  

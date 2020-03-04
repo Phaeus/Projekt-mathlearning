@@ -1,7 +1,6 @@
 import React from 'react';
 import {Progress} from 'semantic-ui-react'
 import Countdown from 'react-countdown';
-import { useState } from 'react';
 
 export default function Timebar(props){
 
@@ -18,7 +17,6 @@ export default function Timebar(props){
         }
         else{
             let inSeconds = (seconds + minutes*60 + hours*360 + milliseconds/1000);
-            //setTime(inSeconds);
             return(
                 <div>
                     <p>{minutes}:{seconds}:{milliseconds}</p>

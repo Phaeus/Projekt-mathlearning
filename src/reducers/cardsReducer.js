@@ -1,8 +1,8 @@
 
 const initialState = {
-    cardlist: [{question: "45-6", answer: "39", id: 1, displayTime: 10},
-    {question: "5*5", answer: "25", id: 2, displayTime: 10},
-    {question: "10*10", answer: "100", id: 3, displayTime: 10}],
+    cardlist: [{question: "45-6", answer: "39", id: 1, displayTime: 3},
+    {question: "5*5", answer: "25", id: 2, displayTime: 3},
+    {question: "10*10", answer: "100", id: 3, displayTime: 3}],
     card: null,
     lastId:3,
     selectedEquation:null

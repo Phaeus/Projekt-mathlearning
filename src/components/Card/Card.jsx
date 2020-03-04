@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Mathjax from 'react-mathjax-preview'
 
 import history from '../../history';
 import { getCard, getCards } from '../../actions';
 import './Card.css';
 import Timebar from './Timebar';
+import AnswerInput from './AnswerInput';
 
 class Card extends Component {
   constructor(props){
@@ -14,11 +16,11 @@ class Card extends Component {
       cardCounter: 0,
       time:5,
       currentAnswer:null,
-      answers:[]
+      answers:[],
+      answer: "",
     }
 
     this.saveAnswer = this.saveAnswer.bind(this);
-    this.handleAnswerChange = this.handleAnswerChange.bind(this);
   }
   async componentDidMount() {
     if (this.props.cards.cardlist === null) {
@@ -30,49 +32,38 @@ class Card extends Component {
 
   getCardsFromIds = () => {
     const cardIdList = this.props.cardIdList;
-    console.log(cardIdList);
-    console.log(this.props.cardIdList);
     let cards = [];
     for (let i = 0; i < cardIdList.length; i++) {
       cards.push(this.props.cards.cardlist.find(tar => tar.id === cardIdList[i]));
     }
-    console.log(cards);
     this.setState({cards:cards});
   }
 
-  saveAnswer = () => {
+  saveAnswer = (answer) => {
     let answers = this.state.answers;
-    answers.push(this.state.currentAnswer);
+    answers.push(answer);
     this.setState({answers});
-    console.log(this.state.answers)
-  }
-  
-  handleAnswerChange = (event) => {
-    event.preventDefault();
-    this.setState({currentAnswer:event.target.value});
+    console.log(answers)
+    this.setState({cardCounter: this.state.cardCounter+1});
   }
 
   renderCard(){
     const {cards, cardCounter} = this.state;
     return(
+    <div>
       <div className="ui segment">
         <div className="card">
-          {cards[cardCounter].question}
+        {cards[cardCounter].question}
         </div>
-        <form onSubmit={this.saveAnswer}>
-          <div className="ui input">
-          <input
-            autoFocus
-            onChange={this.handleAnswerChange}
-          />
-          </div>
-        </form>
+     
       </div>
+      <AnswerInput saveAnswer={this.saveAnswer} handleChange={this.handleChange} />
+    </div>
     )
   }
 
   setCompleted = () => {
-    this.saveAnswer();
+    this.saveAnswer("");
     this.setState({cardCounter: this.state.cardCounter+1, time:this.state.time+1});
   }
   
@@ -92,7 +83,7 @@ class Card extends Component {
   render() {
     const {cards, cardCounter} = this.state;
 
-    if (cards === null) {
+    if (cards === null){
       return <div>Loading...</div>;
     }
     else if(cardCounter === cards.length){
