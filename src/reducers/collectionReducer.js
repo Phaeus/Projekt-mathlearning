@@ -3,7 +3,10 @@ const initialState = {
       id: 1,
       title: "Halla",
       cardIdList: [1, 2, 3],
-      randomOrderBool: true}],
+      randomOrderBool: true,
+      creatorId: 0
+    },
+    ],
     collection: null,
     lastCollectionId:1,
     collectionCounter:1
@@ -28,7 +31,7 @@ const initialState = {
             idNew = (state.collectionlist[i].id);
           }
         }
-          const newCollection = {...action.payload.collection, id:idNew+1, cardIdList:action.payload.cardIdList};
+          const newCollection = {...action.payload.collection, id:idNew+1, cardIdList:action.payload.cardIdList, creatorId: action.payload.creatorId};
           let newList = state.collectionlist;
           newList.push(newCollection);
           console.log(state)

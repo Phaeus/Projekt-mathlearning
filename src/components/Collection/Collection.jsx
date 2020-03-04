@@ -70,6 +70,7 @@ class Collection extends Component {
     return (
       <div className="ui container" id="container">
         <h1 className="ui header">{collection.title}</h1>
+        <h2 className="ui secondasy header">Kartenanzahl: {collection.cardIdList.length}</h2>
         {this.renderStartGame()}
         <button className="ui button" onClick={()=>{history.push(`/`)}}>Zurück zur Liste</button>
       </div>

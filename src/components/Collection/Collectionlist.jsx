@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getCollections, getLoginSuccess} from '../../actions';
-import { Link} from 'react-router-dom';
+import { getCollections, getLoginSuccess, getUserlist} from '../../actions';
 
 import history from '../../history';
 
@@ -17,6 +16,14 @@ class Collectionlist extends Component {
     if(this.props.user.loginSuccess === null){
       await this.props.getLoginSuccess();
     }
+    if(this.props.user.getUserlist === null){
+      await this.props.getUserlist();
+    }
+  }
+
+  findCreator = (creatorId) => {
+    const creator = this.props.user.userlist.find(user => user.id === creatorId).username;
+    return creator;
   }
 
   renderCollections() {
@@ -25,7 +32,7 @@ class Collectionlist extends Component {
         collectionlist.map(collection => {
             return(
                 <div key={collection.id} className="ui segment" id="collection" onClick={() => {history.push(`/collections/${collection.id}`)}}>
-                  {collection.title}
+                  {collection.title} Anzahl Karten:{collection.cardIdList.length} Creator:{this.findCreator(collection.creatorId)}
             </div>
             )
         }
@@ -94,7 +101,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   getCollections: getCollections,
-  getLoginSuccess
+  getLoginSuccess,
+  getUserlist
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Collectionlist);

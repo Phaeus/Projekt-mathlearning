@@ -1,6 +1,6 @@
 const initialState = {
     userlist: [
-        {username:"h", password:"h", createdCollection:[], id:0}
+        {username:"h", password:"h", createdCollection:[], playedCollection:[], id:0}
     ],
     user:null,
     loginSuccess:false,
@@ -26,7 +26,7 @@ export default(state = initialState, action) => {
                 }
             }
             console.log(action.payload)
-            const newUser = {...action.payload, createdCollection:[], id:idNew+1};
+            const newUser = {...action.payload, createdCollection:[], playedCollection:[], id:idNew+1};
             let newList = state.userlist;
             newList.push(newUser);
             return {...state, userlist:newList}
@@ -64,13 +64,18 @@ export default(state = initialState, action) => {
             return {...state, usernameAvailable:true, loginSuccess:true}
 
         case "ADD_PLAYED_COLLECTION":
-            let userNew = {...state.user, playedCollection: action.payload};
+            let playedCollection = state.user.playedCollection;
+            let nUser = state.userlist.find(user => user.id === state.user.id);
+            playedCollection.push(action.payload);
+            nUser = {...nUser, playedCollection: playedCollection};
             let userlistNew = state.userlist;
             for (let i = 0; i < userlistNew.length; i++) {
-                if(userlistNew[i].id === userNew.id){
-                    userlistNew[i] = userNew;
+                if(userlistNew[i].id === nUser.id){
+                    userlistNew[i] = nUser;
                 }
             }
+            console.log(userlistNew)
+            console.log("halla")
             return {...state, userlist: userlistNew}
         
         case "ADD_CREATED_COLLECTION":

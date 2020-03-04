@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import history from '../../history';
-import { createCollection, getCollections, createCard, getCards, addCreatedCollection, getLastCollectionId} from '../../actions';
+import { createCollection, getCollections, createCard, getCards, addCreatedCollection, getLastCollectionId, getUser} from '../../actions';
 import CreateCardForm from '../Card/CreateCardForm';
 import './CreateCollection.css';
 import Header from '../Header';
@@ -23,11 +23,14 @@ class CreateCollection extends Component {
         if (this.props.cards.cardlist === null) {
             await this.props.getCards();
         }
+        if(this.props.user.user === null){
+            await this.props.getUser();
+        }
     }
     async onCollectionSubmit(cardArray, randomOrderBool) {
         const cardIds = this.setCardIds(cardArray);
         this.props.addCreatedCollection(this.props.collections.lastCollectionId+1);
-        await this.props.createCollection({title: this.state.collectionTitle, randomOrderBool}, cardIds);
+        await this.props.createCollection({title: this.state.collectionTitle, randomOrderBool}, cardIds, this.props.user.user.id);
         await this.props.createCard(cardArray);
         history.push(`/`);
     }
@@ -61,7 +64,9 @@ class CreateCollection extends Component {
                     
                     <div className="ui segment">
                     <form onSubmit={this.onCollectionSubmit}>
+                        <div className="ui input">
                         <input type="text" placeholder="Title" name="text" value={this.state.collectionTitle} onChange={e => this.setState({ collectionTitle: e.target.value })} />
+                        </div>
                     </ form>
                         <CreateCardForm onSubmit={this.onCollectionSubmit} />
                     </div>
@@ -76,7 +81,8 @@ class CreateCollection extends Component {
 const mapStateToProps = state => {
     return {
         collections: state.collections,
-        cards: state.cards
+        cards: state.cards,
+        user: state.user
     }
 }
 
@@ -86,7 +92,8 @@ const mapDispatchToProps = {
     getCards: getCards,
     createCard: createCard,
     addCreatedCollection:addCreatedCollection,
-    getLastCollectionId
+    getLastCollectionId,
+    getUser
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateCollection);

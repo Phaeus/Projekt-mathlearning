@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Mathjax from 'react-mathjax-preview'
 
 import history from '../../history';
-import { getCard, getCards } from '../../actions';
+import { getCard, getCards, getUser, addPlayedCollection} from '../../actions';
 import './Card.css';
 import Timebar from './Timebar';
 import AnswerInput from './AnswerInput';
@@ -26,7 +26,9 @@ class Card extends Component {
     if (this.props.cards.cardlist === null) {
       await this.props.getCards();
     }
-    console.log(this.props.cards.cardlist);
+    if(this.props.user.user === null){
+      await this.props.getUser();
+    }
     this.getCardsFromIds();
   }
 
@@ -88,6 +90,10 @@ class Card extends Component {
     }
     else if(cardCounter === cards.length){
       history.push(`/collection/${this.props.id}/GameResults`);
+      console.log(this.props.user.user)
+      if(this.props.user.user !== null){
+        this.props.addPlayedCollection(Number(this.props.id));
+      }
       return <div></div>
     }
     else{
@@ -108,12 +114,15 @@ class Card extends Component {
 const mapStateToProps = state => {
   return {
     cards: state.cards,
+    user: state.user
   };
 };
 
 const mapDispatchToProps = {
   getCard: getCard,
   getCards: getCards,
+  getUser: getUser,
+  addPlayedCollection:addPlayedCollection
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Card);

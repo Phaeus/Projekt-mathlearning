@@ -13,13 +13,14 @@ export const getCollections = () => async dispatch => {
     })
   }
 
-  export const createCollection = (collection, cardIdList) => async dispatch => {
+  export const createCollection = (collection, cardIdList, creatorId) => async dispatch => {
       console.log(cardIdList);
       dispatch({
           type: 'CREATE_COLLECTION',
           payload:{
               collection: collection,
               cardIdList: cardIdList,
+              creatorId
           }
       })
   }
@@ -130,6 +131,7 @@ export const getCollections = () => async dispatch => {
   }
 
   export const addPlayedCollection = (collectionId) => async dispatch => {
+      console.log("Halla")
       dispatch({
           type:'ADD_PLAYED_COLLECTION',
           payload:collectionId
