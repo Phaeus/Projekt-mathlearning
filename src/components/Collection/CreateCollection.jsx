@@ -7,6 +7,7 @@ import { createCollection, getCollections, createCard, getCards, addCreatedColle
 import CreateCardForm from '../Card/CreateCardForm';
 import './CreateCollection.css';
 import Header from '../Header';
+import { titleInputVali } from '../ValidationHelper';
 
 const modi = [
     {value: "Countdownmodus", label: "Countdownmodus"},
@@ -21,6 +22,7 @@ class CreateCollection extends Component {
                 collectionTitle:"",
                 toggleRandomRequest: false,
                 modus: "Countdownmodus",
+                showValidation: false
          }
         this.onCollectionSubmit = this.onCollectionSubmit.bind(this);
         this.handleModusChange = this.handleModusChange.bind(this);
@@ -39,10 +41,15 @@ class CreateCollection extends Component {
     }
     async onCollectionSubmit(cardArray, randomOrderBool) {
         const cardIds = this.setCardIds(cardArray);
-        await this.props.addCreatedCollection(this.props.collections.lastCollectionId+1);
-        await this.props.createCollection({title: this.state.collectionTitle, randomOrderBool, cardIdList:cardIds, creatorId:this.props.user.user.id, modus: this.state.modus});
-        this.props.createCard(cardArray);
-        history.push(`/`);
+        if(titleInputVali(this.state.collectionTitle) === null){
+            await this.props.addCreatedCollection(this.props.collections.lastCollectionId+1);
+            await this.props.createCollection({title: this.state.collectionTitle, randomOrderBool, cardIdList:cardIds, creatorId:this.props.user.user.id, modus: this.state.modus});
+            this.props.createCard(cardArray);
+            history.push(`/`);
+        }
+        else{
+            this.setState({showValidation: true});
+        }
     }
     
     setCardIds = (cardArray) => {
@@ -73,6 +80,27 @@ class CreateCollection extends Component {
         )
     }
 
+    renderValidation(){
+        const {collectionTitle} = this.state;
+        const potError = titleInputVali(collectionTitle)
+        if(potError !== null){
+            return(
+                <div>
+                    {potError.label}
+                </div>
+            )
+        }
+        else{
+            return <div/>
+        }
+    }
+    handleTitleChange = (event) => {
+        event.preventDefault();
+        this.setState({ collectionTitle: event.target.value });
+        if(titleInputVali(event.target.value) !== null){
+            this.setState({showValidation:true});
+        }
+    }
     
 
     render() {
@@ -93,11 +121,12 @@ class CreateCollection extends Component {
                     <div className="ui segment">
                     <form onSubmit={this.onCollectionSubmit}>
                         <div className="ui input">
-                        <input type="text" placeholder="Title" name="text" value={this.state.collectionTitle} onChange={e => this.setState({ collectionTitle: e.target.value })} />
+                        <input type="text" placeholder="Title" name="text" value={this.state.collectionTitle} onChange={this.handleTitleChange} />
+                        {this.state.showValidation ?(this.renderValidation()):(<div/>)}
                         </div>
                     </ form>
                     {this.renderModusButtons()}
-                        <CreateCardForm onSubmit={this.onCollectionSubmit} modus={this.state.modus} />
+                        <CreateCardForm onSubmit={this.onCollectionSubmit} modus={this.state.modus} showValidation={this.state.showValidation}/>
                     </div>
                     </div>
                 </div>

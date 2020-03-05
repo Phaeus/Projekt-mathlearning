@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import MathJax from 'react-mathjax-preview';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import history from '../../history';
-//halla
 
 import {getCards, setSelectedEquation} from '../../actions';
 import "./CreateCardForm.css";
 import CollectionConfig from './CollectionConfig';
+import {questionInputVali, answerInputVali, cardVali} from '../ValidationHelper';
 
 class CreateCardForm extends Component {
     constructor(props) {
@@ -22,8 +21,10 @@ class CreateCardForm extends Component {
           lastId: 2,
           timeDisplayBool: false,
           displayTime: 0,
-          equationArray: [{question:"", answer:"", id:0},{question:"", answer:"", id:1},{question:"", answer:"", id:2}],
           showConfig:false,
+          showQuestionValidation: false,
+          showAnswerValidation: false,
+          errors: false
                 }
         this.onDragEnd =  this.onDragEnd.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -91,17 +92,13 @@ class CreateCardForm extends Component {
     handleChange = (event, id, type) => {
       event.preventDefault();
       let newCardlist = this.state.cards;
-      let newEquationlist = this.state.equationArray;
       let newCard = newCardlist.find(card => card.id === id);
-      let newEquation = newEquationlist.find(card => card.id === id);
       let math = "`" + event.target.value + "`";
       if(type === "question"){
         newCard = {...newCard, question: event.target.value};
-        newEquation = {...newEquation, question:math};
       }
       else{
         newCard = {...newCard, answer: event.target.value};
-        newEquation = {...newEquation, answer:math};
       }
       let index = 0;
       for (let i = 0; i < this.state.cards.length; i++) {
@@ -111,11 +108,37 @@ class CreateCardForm extends Component {
         
       } //probleme mit id weil id !== index --> Dokumentation
       newCardlist.splice(index, 1, newCard);
-      newEquationlist.splice(index, 1, newEquation);
       this.setState({cards: newCardlist});
-      this.setState({selectedEquation: math});
-      this.setState({equationArray: newEquationlist});
       this.props.setSelectedEquation(math);
+    }
+
+    renderQuestionValidation(question){
+      if(this.state.showQuestionValidation){
+        if(questionInputVali(question) !== null){
+          return(
+            <div>
+              {questionInputVali(question).label}
+            </div>
+          )
+        }
+        else{ return <div/>}
+      }
+      else{return <div/>}
+    }
+
+    renderAnswerValidation(answer){
+      if(this.state.showAnswerValidation){
+        console.log("Halla")
+        if(answerInputVali(answer) !== null){
+          return(
+            <div>
+              {answerInputVali(answer).label}
+            </div>
+          )
+        }
+        else{ return <div/>}
+      }
+      else{return <div/>}
     }
 
     handleFocus = event => {
@@ -141,17 +164,27 @@ class CreateCardForm extends Component {
     }
 
     removeCard = (event, id) => {
-      let newEquations = this.state.equationArray.filter(equation => equation.id !== id);
       const newCards = this.state.cards.filter(card => card.id !== id);
-      this.setState({equationArray: newEquations});
       this.setState({cards:newCards});
     }
 
-    onSubmit = () => {
-      this.props.onSubmit(this.state.cards, this.state.randomOrderBool);
-      this.setState({equationArray: null});
-      console.log("halla")
-      history.push(`/`);
+    onSubmit = (event) => {
+      event.preventDefault();
+      let submit = true;
+        
+        for (let i = 0; i < this.state.cards.length; i++) {
+          if(this.state.cards[i].question === ""){
+            this.setState({showQuestionValidation: true});
+            submit=false;
+          }
+          if(this.state.cards[i].answer === ""){
+            this.setState({showAnswerValidation: true});
+            submit=false
+          }
+        }
+        if(submit){
+          this.props.onSubmit(this.state.cards, this.state.randomOrderBool);
+        }
     }
 
     onAddClick = (event) => {
@@ -161,7 +194,6 @@ class CreateCardForm extends Component {
       this.setState({cards: cards,
       lastId: this.state.lastId+1
       });
-      console.log(cards, this.state.equationArray);
     }
 
     renderBars(){
@@ -189,7 +221,6 @@ class CreateCardForm extends Component {
                 <form onSubmit={this.onSubmit}>
                     <div  id="scroll-container" className="ui segment">
                     <div className="flex-container">
-                      {console.log("renderfunktion",this.state.cards, this.state.equationArray)}
                     {this.state.cards.map((card) => (
                         <div className="flex-container" key={card.id} >
                           <Draggable key={""+card.id} draggableId={""+card.id} index={card.id}>
@@ -216,6 +247,7 @@ class CreateCardForm extends Component {
                                     onChange={e => {this.handleChange(e, card.id, "question")}}
                                     onFocus={this.handleFocus}
                                   />
+                                  {this.renderQuestionValidation(this.state.cards.find(cardd => cardd.id === card.id).question)}
                                   <div>
                                   <input
                                     value={this.state.cards.find(cardd => cardd.id === card.id).answer}
@@ -225,6 +257,7 @@ class CreateCardForm extends Component {
                                     onChange={e => this.handleChange(e, card.id, "answer")}
                                     onFocus={this.handleFocus}
                                   />
+                                  {this.renderAnswerValidation(this.state.cards.find(cardd => cardd.id === card.id).answer)}
                                   </div>
                                 <div>{card.id}</div>
                                 <div>
@@ -235,7 +268,14 @@ class CreateCardForm extends Component {
                                 </div>
                                 ):(
                                 <div className="clear-segment" onClick={() => this.setState({showFields:true, showConfig:true, selectedIndex: card.id})}>
+                                  {cardVali(this.state.cards.find(equa => equa.id === card.id).question, this.state.cards.find(equa => equa.id === card.id).answer) === null ?
+                                  (
                                     <MathJax math={"`"+this.state.cards.find(equa => equa.id === card.id).question+"`"} />  
+                                  ):(
+                                    <div>{cardVali(this.state.cards.find(equa => equa.id === card.id).question, this.state.cards.find(equa => equa.id === card.id).answer).label}</div>
+                                  )
+                                  }
+                                    
                                 </div>
                                 )}
                               </div>
