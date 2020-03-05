@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import {RadioButtonGroup} from 'react-rainbow-components';
 
 import history from '../../history';
 import { createCollection, getCollections, createCard, getCards, addCreatedCollection, getLastCollectionId, getUser} from '../../actions';
@@ -7,15 +8,24 @@ import CreateCardForm from '../Card/CreateCardForm';
 import './CreateCollection.css';
 import Header from '../Header';
 
+const modi = [
+    {value: "Countdownmodus", label: "Countdownmodus"},
+    {value: "Timermodus", label: "Timermodus"},
+    {value: "Learningmodus", label: "Learningmodus"}
+]
+
 class CreateCollection extends Component {
     constructor(props) {
         super(props)
         this.state={
                 collectionTitle:"",
-                toggleRandomRequest: false
+                toggleRandomRequest: false,
+                modus: "Countdownmodus",
          }
         this.onCollectionSubmit = this.onCollectionSubmit.bind(this);
+        this.handleModusChange = this.handleModusChange.bind(this);
     }
+
     async componentDidMount() {
         if(this.props.collections.collectionlist === null){
             await this.props.getCollections();
@@ -29,9 +39,9 @@ class CreateCollection extends Component {
     }
     async onCollectionSubmit(cardArray, randomOrderBool) {
         const cardIds = this.setCardIds(cardArray);
-        this.props.addCreatedCollection(this.props.collections.lastCollectionId+1);
-        await this.props.createCollection({title: this.state.collectionTitle, randomOrderBool}, cardIds, this.props.user.user.id);
-        await this.props.createCard(cardArray);
+        await this.props.addCreatedCollection(this.props.collections.lastCollectionId+1);
+        await this.props.createCollection({title: this.state.collectionTitle, randomOrderBool, cardIdList:cardIds, creatorId:this.props.user.user.id, modus: this.state.modus});
+        this.props.createCard(cardArray);
         history.push(`/`);
     }
     
@@ -43,6 +53,24 @@ class CreateCollection extends Component {
         }
         console.log(idList);
         return idList;
+    }
+
+    handleModusChange = (event) => {
+        event.preventDefault();
+        return this.setState({modus: event.target.value});
+    }
+
+    renderModusButtons(){
+        return(
+            <div>
+                <RadioButtonGroup 
+                    id="radio-button-group-component-1"
+                    options={modi}
+                    value={this.state.modus}
+                    onChange={this.handleModusChange}
+                />
+            </div>
+        )
     }
 
     
@@ -68,7 +96,8 @@ class CreateCollection extends Component {
                         <input type="text" placeholder="Title" name="text" value={this.state.collectionTitle} onChange={e => this.setState({ collectionTitle: e.target.value })} />
                         </div>
                     </ form>
-                        <CreateCardForm onSubmit={this.onCollectionSubmit} />
+                    {this.renderModusButtons()}
+                        <CreateCardForm onSubmit={this.onCollectionSubmit} modus={this.state.modus} />
                     </div>
                     </div>
                 </div>

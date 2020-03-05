@@ -23,7 +23,7 @@ class CreateCardForm extends Component {
           timeDisplayBool: false,
           displayTime: 0,
           equationArray: [{question:"", answer:"", id:0},{question:"", answer:"", id:1},{question:"", answer:"", id:2}],
-          showConfig:false
+          showConfig:false,
                 }
         this.onDragEnd =  this.onDragEnd.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -135,7 +135,6 @@ class CreateCardForm extends Component {
         result.source.index,
         result.destination.index
       );
-        console.log(items);
       this.setState({
         cards:items,
       });
@@ -184,7 +183,7 @@ class CreateCardForm extends Component {
                       ADD CARD
                     </button>
               <div className="flex-container">
-                          <CollectionConfig displayTime={this.state.cards[this.state.selectedIndex]} showConfig={this.state.showConfig} onRandomChange={this.onRandomChange} onTimeDisplayChange={this.onTimeDisplayChange} onTimeChange={this.onTimeChange} />
+                          <CollectionConfig modus={this.props.modus} displayTime={this.state.cards[this.state.selectedIndex]} showConfig={this.state.showConfig} onRandomChange={this.onRandomChange} onTimeDisplayChange={this.onTimeDisplayChange} onTimeChange={this.onTimeChange} />
                         {this.renderCardDisplay()}
                     </div>
                 <form onSubmit={this.onSubmit}>
@@ -262,8 +261,6 @@ class CreateCardForm extends Component {
   </div>
       )
     }
-
-    //Tickbox einfügen für random wiedergabe
 
     render() {
         return(

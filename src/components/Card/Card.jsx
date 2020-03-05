@@ -6,6 +6,7 @@ import history from '../../history';
 import { getCard, getCards, getUser, addPlayedCollection} from '../../actions';
 import './Card.css';
 import Timebar from './Timebar';
+import Timer from './Timer';
 import AnswerInput from './AnswerInput';
 
 class Card extends Component {
@@ -18,8 +19,9 @@ class Card extends Component {
       currentAnswer:null,
       answers:[],
       answer: "",
+      timerStatus: false
     }
-
+    
     this.saveAnswer = this.saveAnswer.bind(this);
   }
   async componentDidMount() {
@@ -31,6 +33,7 @@ class Card extends Component {
     }
     this.getCardsFromIds();
   }
+
 
   getCardsFromIds = () => {
     const cardIdList = this.props.cardIdList;
@@ -47,6 +50,10 @@ class Card extends Component {
     this.setState({answers});
     console.log(answers)
     this.setState({cardCounter: this.state.cardCounter+1});
+    if(this.state.cardCounter === this.state.cards){
+      {}
+      this.setState({timerStatus: false});
+    }
   }
 
   renderCard(){
@@ -55,7 +62,7 @@ class Card extends Component {
     <div>
       <div className="ui segment">
         <div className="card">
-        {cards[cardCounter].question}
+          <Mathjax math={"`" + cards[cardCounter].question + "`"}/>
         </div>
      
       </div>
@@ -71,9 +78,9 @@ class Card extends Component {
   
   renderBar = () => {
     const {cards, cardCounter} = this.state;
-
-    if(cards[cardCounter].displayTime === 0){
-      return <div></div>
+    console.log(this.state.timerStatus)
+    if(cards[cardCounter].displayTime === 0 || this.props.modus === "Learningmodus" || this.props.modus === "Timermodus"){
+      return <Timer startTimer={true} stopTimer={this.state.timerStatus} />
     }
     else{
       return(
@@ -90,8 +97,7 @@ class Card extends Component {
     }
     else if(cardCounter === cards.length){
       history.push(`/collection/${this.props.id}/GameResults`);
-      console.log(this.props.user.user)
-      if(this.props.user.user !== null){
+      if(this.props.user.loginSuccess){
         this.props.addPlayedCollection(Number(this.props.id));
       }
       return <div></div>

@@ -2,7 +2,11 @@
 const initialState = {
     cardlist: [{question: "45-6", answer: "39", id: 1, displayTime: 3},
     {question: "5*5", answer: "25", id: 2, displayTime: 3},
-    {question: "10*10", answer: "100", id: 3, displayTime: 3}],
+    {question: "10*10", answer: "100", id: 3, displayTime: 3},
+    {question: "1+1", answer: "2", displayTime: 0, id: 4},
+    {question: "2+2", answer: "4", displayTime: 0, id: 5},
+    {question: "4+4", answer: "8", displayTime: 0, id: 6}
+  ],
     card: null,
     lastId:3,
     selectedEquation:null

@@ -32,7 +32,7 @@ class Collectionlist extends Component {
         collectionlist.map(collection => {
             return(
                 <div key={collection.id} className="ui segment" id="collection" onClick={() => {history.push(`/collections/${collection.id}`)}}>
-                  {collection.title} Anzahl Karten:{collection.cardIdList.length} Creator:{this.findCreator(collection.creatorId)}
+                  {collection.title} Anzahl Karten:{collection.cardIdList.length} Creator:{this.findCreator(collection.creatorId)} Modus:{collection.modus}
             </div>
             )
         }

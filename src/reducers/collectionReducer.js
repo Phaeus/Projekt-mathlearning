@@ -1,11 +1,20 @@
 const initialState = {
     collectionlist:[{
-      id: 1,
       title: "Halla",
-      cardIdList: [1, 2, 3],
       randomOrderBool: true,
-      creatorId: 0
+      cardIdList: [1, 2, 3],
+      creatorId: 0,
+      modus:"Countdownmodus",
+      id: 1
     },
+    {
+      title: "Timermodus",
+      randomOrderBool: false,
+      cardIdList: [4, 5, 6],
+      creatorId: 0,
+      modus: "Timermodus",
+      id: 2
+    }
     ],
     collection: null,
     lastCollectionId:1,
@@ -25,13 +34,14 @@ const initialState = {
         return { ...state, collection:collection};
 
       case 'CREATE_COLLECTION':
+        const createdCollection = action.payload.collection;
         let idNew = 0;
         for(let i = 0; i<state.collectionlist.length; i++) {
           if(idNew<state.collectionlist[i].id) {
             idNew = (state.collectionlist[i].id);
           }
         }
-          const newCollection = {...action.payload.collection, id:idNew+1, cardIdList:action.payload.cardIdList, creatorId: action.payload.creatorId};
+          const newCollection = {...createdCollection, id:idNew+1, cardIdList:createdCollection.cardIdList, creatorId: createdCollection.creatorId};
           let newList = state.collectionlist;
           newList.push(newCollection);
           console.log(state)

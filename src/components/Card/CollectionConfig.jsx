@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import './CollectionConfig.css';
+import Countdown from 'react-countdown';
 
 const onRandomChange = (props, randomChecked) => {
     props.onRandomChange(randomChecked);
@@ -17,6 +18,42 @@ export default function CollectionConfig(props){
     const [randomChecked, setRandomChecked] = useState(false);
     const [timeChecked, setTimeChecked] = useState(false);
 
+    function renderCountdownmodus(){
+        if(props.modus === "Countdownmodus" && props.showConfig){
+            return(
+                <div>
+                <div className="ui divider"/>
+                <div className="rendition-time">
+                <div className="random-label">
+                    Rendition Time
+                </div>
+                <div className="ui toggle checkbox">
+                  <input type="checkbox" checked={timeChecked} onChange={() => { onTimeDisplayChange(props, !timeChecked); setTimeChecked(!timeChecked)}} />
+                  <label></label>   
+                </div>
+                </div>
+                {timeChecked ? (
+                    <div>
+                        <form>
+                            <input 
+                            type="number"
+                            placeholder="Time in seconds"
+                            value={props.displayTime.displayTime}
+                            onChange={e => onTimeChange(props, e)}
+                            />
+                        </form>
+                    </div>
+                ):(<div/>)}
+                </div>
+                )
+        }
+        else{
+            return(
+                <div />
+            )
+        }
+    }
+
     return(
         <div className="ui segment" id="config-box">
             <div className="renditon">
@@ -33,39 +70,7 @@ export default function CollectionConfig(props){
                   <p>Chronological</p>
               )}
             </div>
-            {props.showConfig ? (
-                <div>
-                <div className="ui divider"/>
-                <div className="rendition-time">
-                <div className="random-label">
-                    Rendition Time
-                </div>
-                <div className="ui toggle checkbox">
-                  <input type="checkbox" checked={timeChecked} onChange={() => { onTimeDisplayChange(props, !timeChecked); setTimeChecked(!timeChecked)}} />
-                  <label></label>   
-                </div>
-                {timeChecked ? (
-                    <div>
-                        <form>
-                            <input 
-                            type="number"
-                            placeholder="Time in seconds"
-                            value={props.displayTime.displayTime}
-                            onChange={e => onTimeChange(props, e)}
-                            />
-                        </form>
-                    </div>
-                ):(
-                    <div>
-
-                    </div>
-                )}
-            </div>
-            </div>
-            ):(
-                <div/>
-            )}
-            
+            {renderCountdownmodus()}
         </div>
         )
 }

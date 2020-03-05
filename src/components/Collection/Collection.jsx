@@ -55,7 +55,7 @@ class Collection extends Component {
     }
     else{
       return(
-        <Card cardIdList={this.state.cardIdList} id={this.state.collectionId} cardCounter={this.state.cardCounter}/>
+        <Card cardIdList={this.state.cardIdList} id={this.state.collectionId} cardCounter={this.state.cardCounter} modus={this.props.collections.collection.modus}/>
       )
     }
     }  
@@ -70,7 +70,7 @@ class Collection extends Component {
     return (
       <div className="ui container" id="container">
         <h1 className="ui header">{collection.title}</h1>
-        <h2 className="ui secondasy header">Kartenanzahl: {collection.cardIdList.length}</h2>
+        <h2 className="ui secondary header">Kartenanzahl: {collection.cardIdList.length}</h2>
         {this.renderStartGame()}
         <button className="ui button" onClick={()=>{history.push(`/`)}}>Zurück zur Liste</button>
       </div>
