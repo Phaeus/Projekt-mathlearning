@@ -16,7 +16,7 @@ class Header extends Component {
         return(
                 <div className="ui secondary pointing menu">
                     <div className="left menu">
-                       <h1 className="item">Halla</h1>
+                       <h1 className="item">Mathlearning</h1>
                     </div>
                     <div className="right menu">
                             {

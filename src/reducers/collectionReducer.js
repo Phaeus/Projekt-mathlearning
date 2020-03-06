@@ -14,11 +14,23 @@ const initialState = {
       creatorId: 0,
       modus: "Timermodus",
       id: 2
+    },
+    {
+      title: 'Learningmodus',
+      randomOrderBool: true,
+      cardIdList: [
+        4,
+        5,
+        6
+      ],
+      creatorId: 0,
+      modus: 'Learningmodus',
+      id: 3
     }
     ],
     collection: null,
-    lastCollectionId:1,
-    collectionCounter:1
+    lastCollectionId:3,
+    collectionCounter:3
   };
   
   export default (state = initialState, action) => {
@@ -45,7 +57,7 @@ const initialState = {
           let newList = state.collectionlist;
           newList.push(newCollection);
           console.log(state)
-          return { ...state, collectionlist:newList, lastCollectionId: idNew+1}
+          return { ...state, collectionlist:newList, lastCollectionId: idNew+1, collectionCounter: state.collectionCounter+1}
       case 'GET_LAST_COLLECTION_ID':
         let lastId = 0;
         for(let i = 0; i<state.collectionlist.length; i++) {
@@ -53,7 +65,7 @@ const initialState = {
             lastId = (state.collectionlist[i].id);
           }
         }
-        return {...state, lastCollectionId:lastId, collectionCounter: state.collectionCounter+1}
+        return {...state, lastCollectionId:lastId}
       default:
         return state;
     }

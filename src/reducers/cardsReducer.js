@@ -5,10 +5,28 @@ const initialState = {
     {question: "10*10", answer: "100", id: 3, displayTime: 3},
     {question: "1+1", answer: "2", displayTime: 0, id: 4},
     {question: "2+2", answer: "4", displayTime: 0, id: 5},
-    {question: "4+4", answer: "8", displayTime: 0, id: 6}
+    {question: "4+4", answer: "8", displayTime: 0, id: 6},
+    {
+      question: 'sdfg',
+      answer: 'sdfgggfd',
+      displayTime: 0,
+      id: 7
+    },
+    {
+      question: 'fgf',
+      answer: 'ghfvb',
+      displayTime: 0,
+      id: 8
+    },
+    {
+      question: 'sdfg',
+      answer: 'dfhg',
+      displayTime: 0,
+      id: 9
+    }
   ],
     card: null,
-    lastId:3,
+    lastId:9,
     selectedEquation:null
   };
   

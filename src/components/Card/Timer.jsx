@@ -3,34 +3,25 @@ import React, { useState, useEffect } from 'react';
 export default function Timer(props){
     const [time, setTime] = useState(0);
     const [isOn, setIsOn] = useState(props.startTimer);
-    const [timer, setTimer] = useState(null);
-    const [pause, setPause] = useState(false);
 
     //https://medium.com/@650egor/react-30-day-challenge-day-1-simple-timer-df85d0867553
 
-    const startTimer = (timer) => {
-        setIsOn(false);
-        const start = Date.now()
-        console.log(Date.now() - start)
-        timer =  setInterval(() => setTime(Date.now() - start), 1);
-    }
 
-    //useEffect(() => {
-    //    if(isOn){
-    //        startTimer()
-    //    }
-    //})
+    const setStoppedTime = (stoppedTime) => {
+        console.log(stoppedTime)
+        props.setStoppedTime(stoppedTime);
+    }
 
     useEffect(() => {
         let timer= null;
+        let timee = null;
         if(isOn){
             setIsOn(false);
             const start = Date.now()
-            console.log(Date.now() - start)
-            timer =  setInterval(() => setTime(Date.now() - start), 1);
+            timer =  setInterval(() => {setTime(Date.now() - start); timee = Date.now() - start}, 1);
         }
         return function cleanUp(){
-            console.log(msToTime(time))
+            setStoppedTime(msToTime(timee));
             clearInterval(timer);
         }
     },[])

@@ -19,7 +19,8 @@ class Card extends Component {
       currentAnswer:null,
       answers:[],
       answer: "",
-      timerStatus: false
+      timerStatus: false,
+      stoppedTime: 0
     }
     
     this.saveAnswer = this.saveAnswer.bind(this);
@@ -51,7 +52,6 @@ class Card extends Component {
     console.log(answers)
     this.setState({cardCounter: this.state.cardCounter+1});
     if(this.state.cardCounter === this.state.cards){
-      {}
       this.setState({timerStatus: false});
     }
   }
@@ -73,14 +73,21 @@ class Card extends Component {
 
   setCompleted = () => {
     this.saveAnswer("");
-    this.setState({cardCounter: this.state.cardCounter+1, time:this.state.time+1});
+    this.setState({time:this.state.time+1});
+  }
+
+  setStoppedTime = (stoppedTime) => {
+    this.setState({stoppedTime});
   }
   
   renderBar = () => {
     const {cards, cardCounter} = this.state;
     console.log(this.state.timerStatus)
-    if(cards[cardCounter].displayTime === 0 || this.props.modus === "Learningmodus" || this.props.modus === "Timermodus"){
-      return <Timer startTimer={true} stopTimer={this.state.timerStatus} />
+    if(cards[cardCounter].displayTime === 0 || this.props.modus === "Learningmodus"){
+      return <div></div>
+    }
+    else if(this.props.modus === "Timermodus"){
+      return <Timer startTimer={true} stopTimer={this.state.timerStatus} setStoppedTime={this.setStoppedTime} />
     }
     else{
       return(
@@ -109,7 +116,7 @@ class Card extends Component {
            {this.renderBar()} 
            {this.renderCard()}
            {console.log(this.state)}
-           <button className="ui negative button" onClick={() => {this.setState({cardCounter: cardCounter+1}, this.saveAnswer)}}>NEXT</button>
+           <button className="ui negative button" onClick={() => {this.saveAnswer()}}>NEXT</button>
           </div>
         </div>
       );

@@ -15,14 +15,14 @@ export const titleInputVali = (input) => {
 }
 
 export const questionInputVali = (input) => {
-    if(input.length == 0){
+    if(input.length === 0){
         return noInputError;
     }
     return null;
 }
 
 export const answerInputVali = (input) => {
-    if(input.length == 0){
+    if(input.length === 0){
         return noInputError;
     }
     return null
