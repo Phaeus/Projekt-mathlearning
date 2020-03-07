@@ -25,6 +25,7 @@ export default function Timer(props){
             clearInterval(timer);
         }
     },[])
+    //useEffect muss nochmal angeguckt werden
 
     //https://stackoverflow.com/questions/9763441/milliseconds-to-time-in-javascript
 

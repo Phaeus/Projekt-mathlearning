@@ -1,6 +1,6 @@
 const initialState = {
     userlist: [
-        {username:"h", password:"h", createdCollection:[], playedCollection:[], id:0}
+        {username:"h", password:"h", createdCollection:[1,2,3], playedCollection:[1,2,3], id:0}
     ],
     user:null,
     loginSuccess:false,

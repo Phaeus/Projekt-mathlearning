@@ -13,9 +13,10 @@ const onTimeChange = (props, event) => {
     props.onTimeChange(event.target.value);
 }
 
-export default function CollectionConfig(props){
-    const [randomChecked, setRandomChecked] = useState(false);
-    const [timeChecked, setTimeChecked] = useState(false);
+export default function EditCollectionConfig(props){
+    console.log(props.rendition)
+    const [randomChecked, setRandomChecked] = useState(props.rendition.random);
+    const [timeChecked, setTimeChecked] = useState(props.rendition.renditionTime);
 
     function renderCountdownmodus(){
         if(props.modus === "Countdownmodus" && props.showConfig){
@@ -60,6 +61,7 @@ export default function CollectionConfig(props){
                 Random rendition
                 </div>
                 <div className="ui toggle checkbox">
+                    {console.log(props.rendition) }
                   <input type="checkbox" checked={randomChecked} onChange={() => { onRandomChange(props, !randomChecked); setRandomChecked(!randomChecked)}} />
                   <label></label>
                 </div>

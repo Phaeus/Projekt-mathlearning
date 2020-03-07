@@ -22,6 +22,13 @@ export const getCollections = () => async dispatch => {
       })
   }
 
+  export const updateCollection = (collection) => async dispatch => {
+      dispatch({
+          type: 'UPDATE_COLLECTION',
+          payload:collection
+      })
+  }
+
   export const getLastCollectionId = () => async dispatch => {
       const response = [];
         dispatch({
@@ -56,6 +63,26 @@ export const getCollections = () => async dispatch => {
       dispatch({
           type:'CREATE_CARD',
           payload: cardList
+      })
+  }
+
+  export const updateCard = (cards) => async dispatch => {
+      dispatch({
+          type:'UPDATE_CARD',
+          payload:cards
+      })
+  }
+
+  export const cardIdsToValue = (cardIds) => async dispatch => {
+      dispatch({
+          type: 'CARD_IDS_TO_VALUE',
+          payload:cardIds
+      })
+  }
+
+  export const setIdsToValueArray = () => async dispatch =>{
+      dispatch({
+          type: 'SET_IDS_TO_VALUE_ARRAY'
       })
   }
 

@@ -19,9 +19,9 @@ const initialState = {
       title: 'Learningmodus',
       randomOrderBool: true,
       cardIdList: [
-        4,
-        5,
-        6
+        7,
+        8,
+        9
       ],
       creatorId: 0,
       modus: 'Learningmodus',
@@ -37,13 +37,13 @@ const initialState = {
     switch (action.type) {
       case 'GET_COLLECTIONS':
         console.log(state);
-        return {...state, collectionlist: action.payload};
+      return {...state, collectionlist: action.payload};
       
       case 'GET_COLLECTION':
         const id = parseInt(action.payload);
         const collection = state.collectionlist.find(t => t.id === id);
         console.log(collection);
-        return { ...state, collection:collection};
+      return { ...state, collection:collection};
 
       case 'CREATE_COLLECTION':
         const createdCollection = action.payload.collection;
@@ -57,7 +57,7 @@ const initialState = {
           let newList = state.collectionlist;
           newList.push(newCollection);
           console.log(state)
-          return { ...state, collectionlist:newList, lastCollectionId: idNew+1, collectionCounter: state.collectionCounter+1}
+      return { ...state, collectionlist:newList, lastCollectionId: idNew+1, collectionCounter: state.collectionCounter+1}
       case 'GET_LAST_COLLECTION_ID':
         let lastId = 0;
         for(let i = 0; i<state.collectionlist.length; i++) {
@@ -65,7 +65,27 @@ const initialState = {
             lastId = (state.collectionlist[i].id);
           }
         }
-        return {...state, lastCollectionId:lastId}
+      return {...state, lastCollectionId:lastId}
+
+      case 'UPDATE_COLLECTION':
+        const updatedCollection = action.payload;
+        let updatedCollectionlist = state.collectionlist;
+        let index;
+        for (let i = 0; i < updatedCollectionlist.length; i++) {
+          if(updatedCollectionlist[i].id === updatedCollection.id){
+            index = i;
+          }
+        }
+        updatedCollectionlist.splice(index, 1, updatedCollection);
+        console.log(updatedCollectionlist);
+      return {...state, collectionlist: updatedCollectionlist}
+      
+      case 'DELETE_COLLECTION':
+        const deleteCollection = action.payload;
+        let deletedCollectionList = state.collectionlist;
+        deletedCollectionList = deletedCollectionList.filter(coll => coll.id !== deleteCollection.id);
+        
+      return {...state, collectionlist:deletedCollectionList}
       default:
         return state;
     }

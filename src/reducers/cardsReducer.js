@@ -1,33 +1,20 @@
 
 const initialState = {
-    cardlist: [{question: "45-6", answer: "39", id: 1, displayTime: 3},
+    cardlist: [
+    {question: "45-6", answer: "39", id: 1, displayTime: 3},
     {question: "5*5", answer: "25", id: 2, displayTime: 3},
     {question: "10*10", answer: "100", id: 3, displayTime: 3},
     {question: "1+1", answer: "2", displayTime: 0, id: 4},
     {question: "2+2", answer: "4", displayTime: 0, id: 5},
     {question: "4+4", answer: "8", displayTime: 0, id: 6},
-    {
-      question: 'sdfg',
-      answer: 'sdfgggfd',
-      displayTime: 0,
-      id: 7
-    },
-    {
-      question: 'fgf',
-      answer: 'ghfvb',
-      displayTime: 0,
-      id: 8
-    },
-    {
-      question: 'sdfg',
-      answer: 'dfhg',
-      displayTime: 0,
-      id: 9
-    }
+    {question: "sdfg", answer: "sdfgggfd", displayTime: 0, id: 7},
+    {question: "fgf", answer: "ghfvb", displayTime: 0, id: 8},
+    {question: "sdfg", answer: "dfhg", displayTime: 0, id: 9}
   ],
     card: null,
     lastId:9,
-    selectedEquation:null
+    selectedEquation:null,
+    idsToValueArray:null
   };
   
   export default (state = initialState, action) => {
@@ -60,6 +47,40 @@ const initialState = {
         console.log(nId);
           return { ...state, cardlist:nList, lastId: nId}
       
+      case 'UPDATE_CARD':
+        const updatedCards = action.payload.cardArray;
+        const updatedIdArray = action.payload.cardIds;
+        let updatedCardlist = state.cardlist;
+        let lastId = state.lastId;
+        for (let i = 0; i < updatedCardlist.length; i++) {
+          for (let a = 0; a < updatedCards.length; a++) {
+            if(updatedCardlist[i].id === updatedCards[a].id){
+              updatedCardlist[i] = updatedCards[a];
+            }
+            if(updatedIdArray[a] > lastId){
+              updatedCardlist.push({...updatedCards[a], id: updatedIdArray[a]});
+              lastId = lastId + 1;
+            }
+          }
+          
+        }
+        console.log(updatedCardlist)
+      return {...state, cardlist: updatedCardlist, lastId}
+      
+      case 'CARD_IDS_TO_VALUE':
+        const cardIds = action.payload;
+        const cards = state.cardlist;
+        let newCardArray = [];
+          for (let i = 0; i < cardIds.length; i++) {
+            newCardArray.push(cards.find(card => card.id === cardIds[i]));
+          }
+          console.log(newCardArray)
+      return {...state, idsToValueArray:newCardArray}
+
+      case 'SET_IDS_TO_VALUE_ARRAY':
+        console.log("Haööa")
+        return {...state, idsToValueArray:null}
+        
       case 'SET_SELECTED_EQUATION':
         const selectedEquation = action.payload;
         return {...state, selectedEquation}

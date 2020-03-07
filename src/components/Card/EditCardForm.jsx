@@ -4,8 +4,8 @@ import MathJax from 'react-mathjax-preview';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 import {getCards, setSelectedEquation} from '../../actions';
-import "./CreateCardForm.css";
-import CollectionConfig from './CollectionConfig';
+import "./EditCardForm.css";
+import CollectionConfig from './EditCollectionConfig';
 import {questionInputVali, answerInputVali, cardVali} from '../ValidationHelper';
 
 class CreateCardForm extends Component {
@@ -17,14 +17,15 @@ class CreateCardForm extends Component {
           selectedIndex: null,
           selectedEquation: null,
           randomOrderBool: false,
-          cards: [{question:"", answer:"", displayTime:0, id:0},{question:"", answer:"", displayTime:0, id:1},{question:"", answer:"", displayTime:0, id:2}],
-          lastId: 2,
+          cards: props.cardArray,
+          lastId: props.lastId,
+          rendition: props.rendition,
           timeDisplayBool: false,
           displayTime: 0,
           showConfig:false,
           showQuestionValidation: false,
           showAnswerValidation: false,
-          errors: false
+          errors: false,
                 }
         this.onDragEnd =  this.onDragEnd.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -44,7 +45,7 @@ class CreateCardForm extends Component {
       let newCard = newCardlist.find(card => card.id === this.state.selectedIndex);
       newCard = {...newCard, displayTime:time};
       let index = 0;
-      for (let i = 0; i < this.state.cards.length; i++){
+      for (let i = 0; i < this.state.cards.length; i++) {
         if(this.state.cards[i].id === this.state.selectedIndex){
           index = i;
         }
@@ -54,11 +55,23 @@ class CreateCardForm extends Component {
       this.setState({cards:newCardlist})
     }
 
+    componentDidUpdate(){
+        if(this.state.cards === null){
+            this.setState({cards: this.props.cardArray})
+        }
+        if(this.state.rendition === null || this.state.rendition === undefined){
+          this.setState({rendition: this.props.rendition});
+          console.log(this.props.rendition)
+        }
+    }
+
     async componentDidMount(){
       if (this.props.cards.cardlist === null) {
         await this.props.getCards();
       }
     }
+
+    
 
     reorder = (list, startIndex, endIndex) => {
       const result = Array.from(list);
@@ -216,7 +229,7 @@ class CreateCardForm extends Component {
                     </button>
               <div className="flex-container">
                 {console.log(this.state.selectedIndex)}
-                          <CollectionConfig modus={this.props.modus} displayTime={this.state.cards[this.state.selectedIndex]} showConfig={this.state.showConfig} onRandomChange={this.onRandomChange} onTimeDisplayChange={this.onTimeDisplayChange} onTimeChange={this.onTimeChange} />
+                          <CollectionConfig rendition={this.state.rendition[this.state.selectedIndex]} modus={this.props.modus} displayTime={this.state.cards[this.state.selectedIndex]} showConfig={this.state.showConfig} onRandomChange={this.onRandomChange} onTimeDisplayChange={this.onTimeDisplayChange} onTimeChange={this.onTimeChange} />
                         {this.renderCardDisplay()}
                     </div>
                 <form onSubmit={this.onSubmit}>
@@ -304,13 +317,18 @@ class CreateCardForm extends Component {
     }
 
     render() {
-        return(
-          <div>
-            <div className="card-container">
-                {this.renderBars()}
-            </div>
-          </div>
-        )
+        if(this.state.cards === null){
+            return <div></div>
+        }
+        else{
+            return(
+                <div>
+                  <div className="card-container">
+                      {this.renderBars()}
+                  </div>
+                </div>
+              )
+        }
     }
 
 }

@@ -28,6 +28,7 @@ class Collectionlist extends Component {
 
   renderCollections() {
     const { collectionlist } = this.props.collections;
+    console.log(collectionlist)
       return (
         collectionlist.map(collection => {
             return(
