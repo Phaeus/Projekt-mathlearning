@@ -15,7 +15,7 @@ class Header extends Component {
     render(){
         return(
                 <div className="ui secondary pointing menu">
-                    <div className="left menu">
+                    <div className="left menu" style={{cursor: "pointer"}} onClick={() => {history.push(`/`)}}>
                        <h1 className="item">Mathlearning</h1>
                     </div>
                     <div className="right menu">

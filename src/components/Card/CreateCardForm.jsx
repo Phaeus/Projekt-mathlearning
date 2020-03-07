@@ -178,7 +178,7 @@ class CreateCardForm extends Component {
 
     removeCard = (event, id) => {
       const newCards = this.state.cards.filter(card => card.id !== id);
-      this.setState({cards:newCards});
+      this.setState({cards:newCards, selectedId: null});
     }
 
     onSubmit = (event) => {

@@ -29,6 +29,13 @@ export const getCollections = () => async dispatch => {
       })
   }
 
+  export const deleteCollection = (collectionId) => async dispatch => {
+      dispatch({
+        type: 'DELETE_COLLECTION',
+        payload: collectionId
+      })
+  }
+
   export const getLastCollectionId = () => async dispatch => {
       const response = [];
         dispatch({
@@ -70,6 +77,13 @@ export const getCollections = () => async dispatch => {
       dispatch({
           type:'UPDATE_CARD',
           payload:cards
+      })
+  }
+
+  export const deleteCards = (cardIds) => async dispatch => {
+      dispatch({
+          type:'DELETE_CARDS',
+          payload:cardIds
       })
   }
 
@@ -168,3 +182,15 @@ export const getCollections = () => async dispatch => {
           payload:collectionId
       })
   }
+  export const deleteCreatedCollection = (collectionId) => async dispatch => {
+    dispatch({
+      type: 'DELETE_CREATED_COLLECTION',
+      payload: collectionId
+    })
+}
+export const deletePlayedCollection = (collectionId) => async dispatch => {
+    dispatch({
+      type: 'DELETE_PLAYED_COLLECTION',
+      payload: collectionId
+    })
+}

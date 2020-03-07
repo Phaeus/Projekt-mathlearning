@@ -47,17 +47,11 @@ const initialState = {
 
       case 'CREATE_COLLECTION':
         const createdCollection = action.payload.collection;
-        let idNew = 0;
-        for(let i = 0; i<state.collectionlist.length; i++) {
-          if(idNew<state.collectionlist[i].id) {
-            idNew = (state.collectionlist[i].id);
-          }
-        }
-          const newCollection = {...createdCollection, id:idNew+1, cardIdList:createdCollection.cardIdList, creatorId: createdCollection.creatorId};
+          const newCollection = {...createdCollection, id:state.lastCollectionId+1, cardIdList:createdCollection.cardIdList, creatorId: createdCollection.creatorId};
           let newList = state.collectionlist;
           newList.push(newCollection);
           console.log(state)
-      return { ...state, collectionlist:newList, lastCollectionId: idNew+1, collectionCounter: state.collectionCounter+1}
+      return { ...state, collectionlist:newList, lastCollectionId: state.lastCollectionId+1, collectionCounter: state.collectionCounter+1}
       case 'GET_LAST_COLLECTION_ID':
         let lastId = 0;
         for(let i = 0; i<state.collectionlist.length; i++) {
@@ -81,10 +75,10 @@ const initialState = {
       return {...state, collectionlist: updatedCollectionlist}
       
       case 'DELETE_COLLECTION':
-        const deleteCollection = action.payload;
+        const deleteCollectionId = action.payload;
         let deletedCollectionList = state.collectionlist;
-        deletedCollectionList = deletedCollectionList.filter(coll => coll.id !== deleteCollection.id);
-        
+        deletedCollectionList = deletedCollectionList.filter(coll => coll.id !== deleteCollectionId);
+        console.log(deletedCollectionList)
       return {...state, collectionlist:deletedCollectionList}
       default:
         return state;

@@ -33,15 +33,9 @@ const initialState = {
         const cardArray = action.payload;
         let nList = state.cardlist;
 
-        for(let i = 0; i<state.cardlist.length; i++) {
-          if(nId<state.cardlist[i].id) {
-            nId = (state.cardlist[i].id)
-          }
-        }
-
         for (let i = 0; i < cardArray.length; i++) {
-          const card = {...cardArray[i], showTimebar:cardArray[i].showTimebar , id:nId+1};
-          nId = nId+1;
+          const card = {...cardArray[i], showTimebar:cardArray[i].showTimebar , id:state.lastId+1};
+          nId = state.lastId+1;
           nList.push(card);
         }
         console.log(nId);
@@ -50,17 +44,25 @@ const initialState = {
       case 'UPDATE_CARD':
         const updatedCards = action.payload.cardArray;
         const updatedIdArray = action.payload.cardIds;
+        let potDeletedArray = action.payload.cardIds;
         let updatedCardlist = state.cardlist;
         let lastId = state.lastId;
         for (let i = 0; i < updatedCardlist.length; i++) {
           for (let a = 0; a < updatedCards.length; a++) {
             if(updatedCardlist[i].id === updatedCards[a].id){
               updatedCardlist[i] = updatedCards[a];
+              potDeletedArray = potDeletedArray.filter(id => id !== updatedCardlist[i].id)
             }
             if(updatedIdArray[a] > lastId){
               updatedCardlist.push({...updatedCards[a], id: updatedIdArray[a]});
               lastId = lastId + 1;
+              potDeletedArray = potDeletedArray.filter(id => id !== updatedCardlist[i].id);
             }
+          }
+        }
+        if(potDeletedArray.length > 0){
+          for (let i = 0; i < potDeletedArray.length; i++){
+            updatedCardlist = updatedCardlist.filter(card => card.id !== potDeletedArray[i]);
           }
         }
         console.log(updatedCardlist)
@@ -82,6 +84,16 @@ const initialState = {
       case 'SET_SELECTED_EQUATION':
         const selectedEquation = action.payload;
         return {...state, selectedEquation}
+
+      case 'DELETE_CARDS':
+        const deleteCardIds = action.payload;
+        let deletedCardList = state.cardlist;
+        for (let i = 0; i < deleteCardIds.length; i++) {
+          deletedCardList = deletedCardList.filter(card => card.id !== deleteCardIds[i]);
+        }
+        console.log(deletedCardList)
+      return {...state, cardlist:deletedCardList}
+
       default:
         return state;
     }

@@ -89,7 +89,34 @@ export default(state = initialState, action) => {
                     newUserlist[i] = neUser;
                 }
             }
+            console.log(newUserlist)
             return {...state, userlist: newUserlist}
+
+        case 'DELETE_CREATED_COLLECTION':
+            let dCollId = action.payload;
+            let delUserList = state.userlist;
+            for (let i = 0; i < delUserList.length; i++) { 
+                for (let a = 0; a < delUserList[i].createdCollection.length; a++) {
+                    if(delUserList[i].createdCollection[a] === dCollId){
+                        let nCreatedList = delUserList[i].createdCollection.filter(coll => coll !== dCollId);
+                        delUserList[i] = {...delUserList[i], createdCollection:nCreatedList}
+                    }
+                }
+            }
+            console.log(delUserList)
+            return {...state, userlist:delUserList}
+        case 'DELETE_PLAYED_COLLECTION':
+            let deCollId = action.payload;
+            let deUserList = state.userlist;
+            for (let i = 0; i < deUserList.length; i++) { 
+                for (let a = 0; a < deUserList[i].playedCollection.length; a++) {
+                    if(deUserList[i].playedCollection[a] === deCollId){
+                        let nePlayedList = deUserList[i].playedCollection.filter(coll => coll !== deCollId);
+                        deUserList[i] = {...deUserList[i], playedCollection:nePlayedList}
+                    }
+                }
+            }
+            return {...state, userlist:deUserList}
         default:
             return state;
     }

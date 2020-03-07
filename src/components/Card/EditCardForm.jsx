@@ -80,7 +80,10 @@ class CreateCardForm extends Component {
 
     reorder = (list, startIndex, endIndex) => {
       const result = Array.from(list);
-      console.log(result, startIndex, endIndex)
+      let startId = result[startIndex].id;
+      let endId = result[endIndex].id;
+      result[endIndex] = {...result[endIndex], id:startId}
+      result[startIndex] = {...result[startIndex], id:endId}
       const [removed] = result.splice(startIndex, 1);
       result.splice(endIndex, 0, removed);
       
@@ -187,7 +190,7 @@ class CreateCardForm extends Component {
 
     removeCard = (event, id) => {
       const newCards = this.state.cards.filter(card => card.id !== id);
-      this.setState({cards:newCards});
+      this.setState({cards:newCards, selectedId:null});
     }
 
     onSubmit = (event) => {
@@ -205,6 +208,7 @@ class CreateCardForm extends Component {
           }
         }
         if(submit){
+          console.log(this.state.cards)
           this.props.onSubmit(this.state.cards, this.state.randomOrderBool);
         }
     }
@@ -231,6 +235,7 @@ class CreateCardForm extends Component {
 
     showRendition = () => {
       console.log(this.state.selectedId)
+      console.log(this.state.cards)
       if(this.state.selectedId !== null){
         return this.state.cards[this.findIndex(this.state.selectedId)].showTimebar
       }

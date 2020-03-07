@@ -52,7 +52,7 @@ class EditCollection extends Component {
         console.log(cardIds)
         if(titleInputVali(this.state.collectionTitle) === null){
             this.props.updateCollection({title: this.state.collectionTitle, randomOrderBool, cardIdList:cardIds, creatorId:this.props.user.user.id, modus: this.state.modus, id: Number(this.props.match.params.id)});
-            this.props.updateCard({cardArray,cardIds});
+            this.props.updateCard({cardArray, cardIds});
             history.push(`/`);
         }
         else{
@@ -64,17 +64,17 @@ class EditCollection extends Component {
         const collection = this.props.collections.collection;
         this.setState({collectionTitle: collection.title})
     }
-    
+     // hier ist ein problem
     setCardIds = (cardArray) => {
         console.log(cardArray)
         let newIdList = this.props.collections.collection.cardIdList;
         let oldLastId = this.findLastIdInIdArray(this.props.collections.collection.cardIdList);
         console.log(oldLastId)
-        let lastId = parseInt(this.props.cards.lastId);
+        let lastCardId = parseInt(this.props.cards.lastId);
         for (let i = 0; i < cardArray.length; i++) {
             if(cardArray[i].id > oldLastId){
-             newIdList.push(lastId + 1);
-             lastId = lastId + 1;
+             newIdList.push(lastCardId + 1);
+             lastCardId = lastCardId + 1;
             }
              console.log(newIdList)
         }
@@ -93,7 +93,7 @@ class EditCollection extends Component {
                 <RadioButtonGroup 
                     id="radio-button-group-component-1"
                     options={modi}
-                    value={this.state.modus}
+                    value={this.props.collections.collection.modus}
                     onChange={this.handleModusChange}
                 />
             </div>
