@@ -9,14 +9,10 @@ const onTimeDisplayChange = (props, timeChecked) => {
 }
 const onTimeChange = (props, event) => {
     event.preventDefault();
-    console.log(event.target.value);
     props.onTimeChange(event.target.value);
 }
 
 export default function EditCollectionConfig(props){
-    console.log(props.rendition)
-    const [randomChecked, setRandomChecked] = useState(props.rendition.random);
-    const [timeChecked, setTimeChecked] = useState(props.rendition.renditionTime);
 
     function renderCountdownmodus(){
         if(props.modus === "Countdownmodus" && props.showConfig){
@@ -28,11 +24,11 @@ export default function EditCollectionConfig(props){
                     Rendition Time
                 </div>
                 <div className="ui toggle checkbox">
-                  <input type="checkbox" checked={timeChecked} onChange={() => { onTimeDisplayChange(props, !timeChecked); setTimeChecked(!timeChecked)}} />
+                  <input type="checkbox" checked={props.showTimebar} onChange={() => { onTimeDisplayChange(props, !props.showTimebar)}} />
                   <label></label>   
                 </div>
                 </div>
-                {timeChecked ? (
+                {props.showTimebar ? (
                     <div>
                         <form>
                             <input 
@@ -61,11 +57,10 @@ export default function EditCollectionConfig(props){
                 Random rendition
                 </div>
                 <div className="ui toggle checkbox">
-                    {console.log(props.rendition) }
-                  <input type="checkbox" checked={randomChecked} onChange={() => { onRandomChange(props, !randomChecked); setRandomChecked(!randomChecked)}} />
+                  <input type="checkbox" checked={props.random} onChange={() => { onRandomChange(props, !props.random)}} />
                   <label></label>
                 </div>
-                {randomChecked ? (
+                {props.random ? (
                   <p>Random</p>
                     ):(
                   <p>Chronological</p>

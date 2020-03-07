@@ -15,7 +15,6 @@ const onTimeChange = (props, event) => {
 
 export default function CollectionConfig(props){
     const [randomChecked, setRandomChecked] = useState(false);
-    const [timeChecked, setTimeChecked] = useState(false);
 
     function renderCountdownmodus(){
         if(props.modus === "Countdownmodus" && props.showConfig){
@@ -27,11 +26,11 @@ export default function CollectionConfig(props){
                     Rendition Time
                 </div>
                 <div className="ui toggle checkbox">
-                  <input type="checkbox" checked={timeChecked} onChange={() => { onTimeDisplayChange(props, !timeChecked); setTimeChecked(!timeChecked)}} />
+                  <input type="checkbox" checked={props.showTimebar} onChange={() => { onTimeDisplayChange(props, !props.showTimebar)}} />
                   <label></label>   
                 </div>
                 </div>
-                {timeChecked ? (
+                {props.showTimebar ? (
                     <div>
                         <form>
                             <input 

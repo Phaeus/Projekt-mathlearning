@@ -145,29 +145,7 @@ class EditCollection extends Component {
         console.log(lastId)
         return lastId
     }
-
-    setRenditionBools = () => {
-        const collection = this.props.collections.collection;
-        const cards = this.props.cards.idsToValueArray;
-        let renditionBools = [];
-        
-        for (let i = 0; i < cards.length; i++) {
-            if(collection.modus.value === "Countdownmodus"){
-                    if(cards[i].renditionTime > 0){
-                        renditionBools.push({random:collection.randomOrderBool, renditionTime: true, id: cards[i].id})
-                    }
-                    else{
-                        renditionBools.push({random:collection.randomOrderBool, renditionTime: false, id: cards[i].id})
-                    }
-            }
-            else{
-                renditionBools.push({random:collection.randomOrderBool, renditionTime: false, id: cards[i].id})
-            }
-        }
-        return renditionBools
-    }
     
-
     render() {
         const {collections} = this.props.collections;
         const {cards} = this.props.cards;
@@ -192,7 +170,7 @@ class EditCollection extends Component {
                     </ form>
                     {this.renderModusButtons()}
                     {console.log(this.props.cards.idsToValueArray)}
-                        <EditCardForm lastId={this.findLastId()} rendition={this.setRenditionBools()} cardArray={this.props.cards.idsToValueArray} onSubmit={this.onCollectionSubmit} modus={this.state.modus} showValidation={this.state.showValidation}/>
+                        <EditCardForm lastId={this.findLastId()} randomOrderBool={this.props.collections.collection.randomOrderBool} cardArray={this.props.cards.idsToValueArray} onSubmit={this.onCollectionSubmit} modus={this.state.modus} showValidation={this.state.showValidation}/>
                     </div>
                     </div>
                 </div>

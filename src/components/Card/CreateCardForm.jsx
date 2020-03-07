@@ -14,10 +14,10 @@ class CreateCardForm extends Component {
         this.state={
           equation:" ",
           showFields:false,
-          selectedIndex: null,
+          selectedId: null,
           selectedEquation: null,
           randomOrderBool: false,
-          cards: [{question:"", answer:"", displayTime:0, id:0},{question:"", answer:"", displayTime:0, id:1},{question:"", answer:"", displayTime:0, id:2}],
+          cards: [{question:"", answer:"", displayTime:0, id:0, showTimebar:false},{question:"", answer:"", displayTime:0, id:1, showTimebar:false},{question:"", answer:"", displayTime:0, id:2, showTimebar:false}],
           lastId: 2,
           timeDisplayBool: false,
           displayTime: 0,
@@ -37,15 +37,26 @@ class CreateCardForm extends Component {
         this.setState({randomOrderBool});
     }
     onTimeDisplayChange = (timeDisplayBool) => {
-      console.log(timeDisplayBool);
+      let newCardlist = this.state.cards;
+      let newCard = newCardlist.find(card => card.id === this.state.selectedId);
+      newCard = {...newCard, showTimebar:timeDisplayBool};
+      let index = 0;
+      for (let i = 0; i < this.state.cards.length; i++){
+        if(this.state.cards[i].id === this.state.selectedId){
+          index = i;
+        }
+        
+      } //probleme mit id weil id !== index --> Dokumentation
+      newCardlist.splice(index, 1, newCard);
+      this.setState({cards:newCardlist})
     }
     onTimeChange = (time) => {
       let newCardlist = this.state.cards;
-      let newCard = newCardlist.find(card => card.id === this.state.selectedIndex);
+      let newCard = newCardlist.find(card => card.id === this.state.selectedId);
       newCard = {...newCard, displayTime:time};
       let index = 0;
       for (let i = 0; i < this.state.cards.length; i++){
-        if(this.state.cards[i].id === this.state.selectedIndex){
+        if(this.state.cards[i].id === this.state.selectedId){
           index = i;
         }
         
@@ -58,21 +69,23 @@ class CreateCardForm extends Component {
       if (this.props.cards.cardlist === null) {
         await this.props.getCards();
       }
+
     }
 
     reorder = (list, startIndex, endIndex) => {
       const result = Array.from(list);
+      console.log(result, startIndex, endIndex)
       const [removed] = result.splice(startIndex, 1);
       result.splice(endIndex, 0, removed);
       
       return result;
-    };
+    }
 
     renderCardDisplay(){
       return(
         <div>
           <div className="ui segment" id="equation-box">
-            {this.state.selectedIndex === null ? (
+            {this.state.selectedId === null ? (
               <div></div>
             ):(
               <div className="equation">
@@ -190,10 +203,32 @@ class CreateCardForm extends Component {
     onAddClick = (event) => {
       event.preventDefault();
       let cards = this.state.cards
-      cards.push({question: "", answer: "", displayTime:0, id: this.state.lastId+1});
+      cards.push({question: "", answer: "", showTimebar:false, displayTime:0, id: this.state.lastId+1});
       this.setState({cards: cards,
       lastId: this.state.lastId+1
       });
+    }
+
+    findIndex = (id) => {
+      const cards = this.state.cards;
+      console.log(id)
+      for (let i = 0; i < cards.length; i++) {
+        if(cards[i].id === id){
+          console.log(i)
+          return i;
+        }
+      }
+      return null;
+    }
+
+    showRendition = () => {
+      console.log(this.state.selectedId)
+      if(this.state.selectedId !== null){
+        return this.state.cards[this.findIndex(this.state.selectedId)].showTimebar
+      }
+      else{
+        return false
+      }
     }
 
     renderBars(){
@@ -215,8 +250,12 @@ class CreateCardForm extends Component {
                       ADD CARD
                     </button>
               <div className="flex-container">
-                {console.log(this.state.selectedIndex)}
-                          <CollectionConfig modus={this.props.modus} displayTime={this.state.cards[this.state.selectedIndex]} showConfig={this.state.showConfig} onRandomChange={this.onRandomChange} onTimeDisplayChange={this.onTimeDisplayChange} onTimeChange={this.onTimeChange} />
+                {console.log(this.state.selectedId)}
+                          <CollectionConfig modus={this.props.modus}
+                          displayTime={this.state.cards[this.findIndex(this.state.selectedId)]}//dfh
+                          showTimebar={this.showRendition()}
+                          showConfig={this.state.showConfig}
+                          onRandomChange={this.onRandomChange} onTimeDisplayChange={this.onTimeDisplayChange} onTimeChange={this.onTimeChange} />
                         {this.renderCardDisplay()}
                     </div>
                 <form onSubmit={this.onSubmit}>
@@ -224,7 +263,7 @@ class CreateCardForm extends Component {
                     <div className="flex-container">
                     {this.state.cards.map((card) => (
                         <div className="flex-container" key={card.id} >
-                          <Draggable key={""+card.id} draggableId={""+card.id} index={card.id}>
+                          <Draggable key={""+card.id} draggableId={""+card.id} index={this.findIndex(card.id)}>
                             
                             {(provided, snapshot) => (
                             <div
@@ -238,7 +277,7 @@ class CreateCardForm extends Component {
                             >
                             
                               <div className="ui segment">
-                                {this.state.showFields && this.state.selectedIndex === card.id ? (
+                                {this.state.showFields && this.state.selectedId === card.id ? (
                                   <div>
                                   <input
                                     value={this.state.cards.find(cardd => cardd.id === card.id).question}
@@ -268,7 +307,7 @@ class CreateCardForm extends Component {
                                 </div>               
                                 </div>
                                 ):(
-                                <div className="clear-segment" onClick={() => this.setState({showFields:true, showConfig:true, selectedIndex: card.id})}>
+                                <div className="clear-segment" onClick={() => this.setState({showFields:true, showConfig:true, selectedId: card.id})}>
                                   {cardVali(this.state.cards.find(equa => equa.id === card.id).question, this.state.cards.find(equa => equa.id === card.id).answer) === null ?
                                   (
                                     <MathJax math={"`"+this.state.cards.find(equa => equa.id === card.id).question+"`"} />  
