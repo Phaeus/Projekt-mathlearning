@@ -12,7 +12,9 @@ class User extends Component{
         this.state = {
             username:null,
             createdCollection: null,
-            loginSuccess:false
+            playedCollection: null,
+            loginSuccess:false,
+            user:null
         }
     }
     
@@ -28,30 +30,35 @@ class User extends Component{
         const { username } = this.props.match.params;
         this.setState({username});
         await this.props.getUser(username);
-        this.setState({loginSuccess: this.props.user.loginSuccess})
         console.log(this.props.user.loginSuccess)
         if(this.props.user.loginSuccess){
-            this.getCreatedCollections()
+            this.setState({loginSuccess: this.props.user.loginSuccess})
+            this.getCollections(this.props.user.user.createdCollection, "created");
+            console.log(this.props.user.user.playedCollection)
+            this.getCollections(this.props.user.user.playedCollection, "played");
+            this.setState({user:this.props.user.user})
         }
         else{
             this.setState({createdCollection: undefined})
+            this.setState({playedCollection: undefined})
+            this.setState({user: undefined})
         }
-        console.log(this.props.user.user)
+        console.log(this.props.user)
       }
 
-      getCreatedCollections = () => {
-        const collectionIds = this.props.user.user.createdCollection;
-        console.log(collectionIds)
-        let createdCollection = [];
+      getCollections = (collections, whichCollection) => {
+        const collectionIds = collections;
+        let selectedCollection = [];
         const allCollections = this.props.collections.collectionlist;
-        console.log(allCollections)
         for (let i = 0; i < collectionIds.length; i++) {
-            console.log(allCollections.find(coll => coll.id === collectionIds[i]))
-            createdCollection.push(allCollections.find(coll => coll.id === collectionIds[i]));
-            console.log(createdCollection[i])
+            selectedCollection.push(allCollections.find(coll => coll.id === collectionIds[i]));
         }
-        console.log(createdCollection)
-        this.setState({createdCollection});
+        if(whichCollection === "created"){
+            this.setState({createdCollection: selectedCollection});
+        }
+        else{
+            this.setState({playedCollection: selectedCollection})
+        }
       }
 
       findCreator = (creatorId) => {
@@ -73,9 +80,47 @@ class User extends Component{
         history.push(`${this.state.username}/editCollection/${collectionId}`)
     }
 
+    renderCreatedCollection(){
+        console.log("Hee")
+        if(this.state.createdCollection !== null){
+            return(
+                <div>
+                {this.state.createdCollection.map(collection => {
+                    return(
+                        <div className="ui segment" id="collection" key={collection.id}>
+                            {collection.title} Anzahl Karten:{collection.cardIdList.length} Creator:{this.findCreator(collection.creatorId)} Modus:{collection.modus}
+                            <i className="edit icon" id="edit" onClick={e => this.handleEditOnClick(e, collection.id)}></i>
+                            <i className="trash alternate icon" id="delete" onClick={e => this.handleDeleteOnClick(e, collection.id, collection.cardIdList)}></i>
+                        </div>
+                    )
+                })} </div>
+            )
+        }
+        else{
+            return <div/>
+        }
+    }
+
+    renderPlayedCollection(){
+        if(this.state.playedCollectionCollection !== null){
+            return(
+                <div>
+                {this.state.playedCollection.map(collection => {
+                    return(
+                        <div className="ui segment" id="collection" key={collection.id}>
+                            {collection.title} Anzahl Karten:{collection.cardIdList.length} Creator:{this.findCreator(collection.creatorId)} Modus:{collection.modus}
+                        </div>
+                    )
+                })} </div>
+            )
+        }
+        else{
+            return <div/>
+        }
+    }
+
     render(){
-        const {createdCollection} = this.state;
-        if(this.props.user.user === null || createdCollection === null ){
+        if(this.state.user === null){
             return <div>Loading...</div>
         }
         else if (!this.state.loginSuccess) {
@@ -83,22 +128,14 @@ class User extends Component{
            return(<div></div>)
         }
         else{
-            console.log(this.props.user.user)
         return(
             <div>
                 <Header />
                 <div className="ui container">
                     createdCollection:
-                    {console.log(createdCollection)}
-                    {createdCollection.map(collection => {
-                        return(
-                            <div className="ui segment" id="collection" key={collection.id}>
-                                {collection.title} Anzahl Karten:{collection.cardIdList.length} Creator:{this.findCreator(collection.creatorId)} Modus:{collection.modus}
-                                <i className="edit icon" id="edit" onClick={e => this.handleEditOnClick(e, collection.id)}></i>
-                                <i className="trash alternate icon" id="delete" onClick={e => this.handleDeleteOnClick(e, collection.id, collection.cardIdList)}></i>
-                            </div>
-                        )
-                    })}
+                    {this.renderCreatedCollection()}
+                    playedCollection:
+                    {this.renderPlayedCollection()}
                     <button className="ui button" onClick={() => {this.props.logoutUser(); history.goBack()}}>Logout</button>
                 </div>
             </div>

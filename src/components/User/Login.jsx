@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import {connect} from 'react-redux';
 import {Formik, Form, Field} from 'formik';
+import * as Yup from 'yup';
 
 import history from '../../history';
 import {checkUser, loginUser} from '../../actions';
@@ -11,13 +12,13 @@ class Login extends Component{
         this.state ={}
     }  
 
-    async checkUser(values){
-        await this.props.checkUser(values.username, values.password);
-        return this.props.user.user.loginSuccess;
+     checkUser(values){
+        this.props.checkUser(values.username, values.password);
+        return this.props.user.loginSuccess;
     }
 
-    async loginUser(username){
-        await this.props.loginUser(username);
+    loginUser(username){
+        this.props.loginUser(username);
     }
 
     render(){
@@ -25,6 +26,13 @@ class Login extends Component{
             <div style={{padding:"20px"}}>
             <Formik
             initialValues={{username:'',password:''}}
+            validationSchema={Yup.object().shape({
+                    username: Yup.string()
+                        .required('Username is required'),
+                    password: Yup.string()
+                        .required('Password is required'),
+                })
+            }
                 onSubmit={values => {
                     if(this.checkUser(values)){
                         console.log("Logged in successfully.");
@@ -33,11 +41,11 @@ class Login extends Component{
                         history.goBack();
                     }
                     else{
-                        console.log("try again")
+                        return(<div>He</div>)
                     }
                 }}
             >
-                {({values, errors, touched, isValidating}) => (
+                {({values, errors, touched, isValidating, isSubmitting}) => (
                     <Form>
                         <div className="ui input">
                     <Field
@@ -46,6 +54,9 @@ class Login extends Component{
                     type="username"
                     placeholder="Username"
                     />
+                    {errors.username && isSubmitting.username?(
+                        <div>{errors.username}</div>
+                    ):null}
                     </div>
                     <div className="ui input">
                     <Field
@@ -53,6 +64,9 @@ class Login extends Component{
                         type="password"
                         placeholder="Password"
                     />
+                    {errors.password && isSubmitting.password?(
+                        <div>{errors.password}</div>
+                    ):null}
                     </div>
                     <button className="ui button" type="submit">Log in</button>
                 </Form>

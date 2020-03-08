@@ -40,6 +40,8 @@ export default(state = initialState, action) => {
             console.log(state.userlist);
             for (let i = 0; i < state.userlist.length; i++) {
                 if(username === state.userlist[i].username && password === state.userlist[i].password){
+                    console.log(username, state.userlist[i])
+                    console.log(password, )
                     return {...state, loginSuccess:true}
                 }
             }
