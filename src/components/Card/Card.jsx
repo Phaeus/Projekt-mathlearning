@@ -83,7 +83,8 @@ class Card extends Component {
   renderBar = () => {
     const {cards, cardCounter} = this.state;
     console.log(cards)
-    if((!cards[cardCounter].showTimebar && this.props.modus === "Countdownmodus") || this.props.modus === "Learningmodus"){
+    console.log(cards[cardCounter])
+    if((!cards[cardCounter].showTimebar && this.props.modus === "Countdownmodus") || this.props.modus === "Learningmodus" || (cards[cardCounter].displayTime === 0 && this.props.modus === "Countdownmodus")){
       return <div></div>
     }
     else if(this.props.modus === "Timermodus"){
