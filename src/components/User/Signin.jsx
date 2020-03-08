@@ -25,6 +25,11 @@ class Signin extends Component{
         }
     }
 
+    async loginUser(username,password){
+        await this.props.createUser({username: username, password:password});
+        await this.props.loginUser(username);
+    }
+
     render(){
         return(
             <div style={{padding:"20px"}}>
@@ -33,9 +38,7 @@ class Signin extends Component{
                 onSubmit={values => {
                     if(this.checkInput(values)){
                         console.log("Signed in successfully");
-                        this.props.createUser({username: values.username, password:values.password});
-                        this.props.loginUser(values.username);
-                        
+                        this.loginUser(values.username, values.password)
                         console.log(this.props.user);
                         history.goBack();
                     }

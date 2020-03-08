@@ -11,7 +11,8 @@ class User extends Component{
         super(props);
         this.state = {
             username:null,
-            createdCollection: null
+            createdCollection: null,
+            loginSuccess:false
         }
     }
     
@@ -27,8 +28,15 @@ class User extends Component{
         const { username } = this.props.match.params;
         this.setState({username});
         await this.props.getUser(username);
+        this.setState({loginSuccess: this.props.user.loginSuccess})
+        console.log(this.props.user.loginSuccess)
+        if(this.props.user.loginSuccess){
+            this.getCreatedCollections()
+        }
+        else{
+            this.setState({createdCollection: undefined})
+        }
         console.log(this.props.user.user)
-        this.getCreatedCollections()
       }
 
       getCreatedCollections = () => {
@@ -67,11 +75,15 @@ class User extends Component{
 
     render(){
         const {createdCollection} = this.state;
-
         if(this.props.user.user === null || createdCollection === null ){
             return <div>Loading...</div>
         }
+        else if (!this.state.loginSuccess) {
+           history.push(`/`);
+           return(<div></div>)
+        }
         else{
+            console.log(this.props.user.user)
         return(
             <div>
                 <Header />

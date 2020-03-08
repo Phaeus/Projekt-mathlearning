@@ -11,9 +11,13 @@ class Login extends Component{
         this.state ={}
     }  
 
-    checkUser(values){
-        this.props.checkUser(values.username, values.password);
-        return this.props.user.loginSuccess;
+    async checkUser(values){
+        await this.props.checkUser(values.username, values.password);
+        return this.props.user.user.loginSuccess;
+    }
+
+    async loginUser(username){
+        await this.props.loginUser(username);
     }
 
     render(){
@@ -24,7 +28,7 @@ class Login extends Component{
                 onSubmit={values => {
                     if(this.checkUser(values)){
                         console.log("Logged in successfully.");
-                        this.props.loginUser(values.username);
+                        this.loginUser(values.username)
                         console.log(this.props.user)
                         history.goBack();
                     }

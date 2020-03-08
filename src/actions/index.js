@@ -121,6 +121,12 @@ export const getCollections = () => async dispatch => {
       })
   }
 
+  export const setUserToNull = () => async dispatch => {
+      dispatch({
+          type: 'SET_USER_TO_NULL'
+      })
+  }
+
   export const getUserlist = () => async dispatch => {
       const response = [];
       dispatch({

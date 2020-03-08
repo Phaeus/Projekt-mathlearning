@@ -14,7 +14,10 @@ export default(state = initialState, action) => {
 
         case "GET_USER":
             const searchedUsername = action.payload;
-            const user = state.userlist.find(user => user.username === searchedUsername);
+            let user = null
+            if(searchedUsername !== null){
+                user = state.userlist.find(user => user.username === searchedUsername);
+            }
             console.log(user)
             return {...state, user}
 
@@ -46,7 +49,7 @@ export default(state = initialState, action) => {
             const loggedInUsername = action.payload;
             const loggedInUser = state.userlist.find(user => user.username === loggedInUsername);
             console.log(loggedInUser);
-            return {...state, user:loggedInUser};
+            return {...state, user:loggedInUser, loginSuccess:true};
         
         case "GET_LOGIN_SUCCESS":
             return {...state, loginSuccess:state.loginSuccess}
