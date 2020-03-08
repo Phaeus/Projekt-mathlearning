@@ -51,8 +51,8 @@ class EditCollection extends Component {
         const cardIds = this.setCardIds(cardArray);
         console.log(cardIds)
         if(titleInputVali(this.state.collectionTitle) === null){
-            this.props.updateCollection({title: this.state.collectionTitle, randomOrderBool, cardIdList:cardIds, creatorId:this.props.user.user.id, modus: this.state.modus, id: Number(this.props.match.params.id)});
-            this.props.updateCard({cardArray, cardIds});
+            this.props.updateCollection({title: this.state.collectionTitle, randomOrderBool, cardIdList:cardIds.newCardIds, creatorId:this.props.user.user.id, modus: this.state.modus, id: Number(this.props.match.params.id)});
+            this.props.updateCard({cardIds, cardArray});
             history.push(`/`);
         }
         else{
@@ -67,19 +67,41 @@ class EditCollection extends Component {
      // hier ist ein problem
     setCardIds = (cardArray) => {
         console.log(cardArray)
-        let newIdList = this.props.collections.collection.cardIdList;
-        let oldLastId = this.findLastIdInIdArray(this.props.collections.collection.cardIdList);
-        console.log(oldLastId)
+        let cardIds1= [];
+        let cardIds2 = [];
+         //IDs von edititierer Collection
+         const oldCardIds2 = this.props.collections.collection.cardIdList;
+        let oldCardIds1 = this.props.collections.collection.cardIdList;
+
         let lastCardId = parseInt(this.props.cards.lastId);
+
+        let newEl = [];
+        let deletedEl = this.props.collections.collection.cardIdList;
+
+        let newCardIds = this.props.collections.collection.cardIdList;
+
         for (let i = 0; i < cardArray.length; i++) {
-            if(cardArray[i].id > oldLastId){
-             newIdList.push(lastCardId + 1);
-             lastCardId = lastCardId + 1;
-            }
-             console.log(newIdList)
+            console.log(cardIds1, cardIds2)
+            cardIds1.push(cardArray[i].id)
         }
-        console.log(newIdList);
-        return newIdList;
+        cardIds2 = cardIds1;
+        for (let i = 0; i < oldCardIds2.length; i++) {
+            newEl = cardIds1.filter(a => a !== oldCardIds2[i])
+            cardIds1 = newEl;
+
+            deletedEl = oldCardIds1.filter(a => a !== cardIds2[i])
+            oldCardIds1 = deletedEl
+        }
+        for (let i = 0; i < deletedEl.length; i++) {
+            newCardIds = newCardIds.filter(card => card !== deletedEl[i])
+        }
+        
+        for (let i = 0; i < newEl.length; i++) {
+            newEl[i] = lastCardId +1; lastCardId = lastCardId+1
+            newCardIds.push(newEl[i])
+        }
+        console.log(newCardIds)
+        return {newCardIds, deletedEl};
     }
 
     handleModusChange = (event) => {

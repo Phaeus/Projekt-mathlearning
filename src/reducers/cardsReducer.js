@@ -1,3 +1,4 @@
+import { updateCard } from "../actions";
 
 const initialState = {
     cardlist: [
@@ -42,31 +43,30 @@ const initialState = {
           return { ...state, cardlist:nList, lastId: nId}
       
       case 'UPDATE_CARD':
+        const updatedIdArray = action.payload.cardIds.newCardIds;
+        const potDelIds = action.payload.cardIds.deletedEl;
         const updatedCards = action.payload.cardArray;
-        const updatedIdArray = action.payload.cardIds;
-        let potDeletedArray = action.payload.cardIds;
-        let updatedCardlist = state.cardlist;
+        const addedEl = action.payload.newEl;
+        let oldCardlist = state.cardlist;
         let lastId = state.lastId;
-        for (let i = 0; i < updatedCardlist.length; i++) {
-          for (let a = 0; a < updatedCards.length; a++) {
-            if(updatedCardlist[i].id === updatedCards[a].id){
-              updatedCardlist[i] = updatedCards[a];
-              potDeletedArray = potDeletedArray.filter(id => id !== updatedCardlist[i].id)
+
+        for (let i = 0; i < updatedIdArray.length; i++) {
+          for (let a = 0; a < oldCardlist.length; a++) {
+            if(updatedIdArray[i] === oldCardlist[a].id){
+              oldCardlist[a] = updatedCards[i];
             }
-            if(updatedIdArray[a] > lastId){
-              updatedCardlist.push({...updatedCards[a], id: updatedIdArray[a]});
-              lastId = lastId + 1;
-              potDeletedArray = potDeletedArray.filter(id => id !== updatedCardlist[i].id);
+            if(updatedIdArray[i] > lastId){
+              updatedCards[i] = {...updatedCards[i], id: updatedIdArray[i]}
+              oldCardlist.push(updatedCards[i])
+              lastId = lastId+1;
             }
           }
         }
-        if(potDeletedArray.length > 0){
-          for (let i = 0; i < potDeletedArray.length; i++){
-            updatedCardlist = updatedCardlist.filter(card => card.id !== potDeletedArray[i]);
-          }
+        for (let i = 0; i < potDelIds.length; i++) {
+          oldCardlist = oldCardlist.filter(card => card.id !== potDelIds[i])
         }
-        console.log(updatedCardlist)
-      return {...state, cardlist: updatedCardlist, lastId}
+        console.log(oldCardlist)
+      return {...state, cardlist: oldCardlist, lastId}
       
       case 'CARD_IDS_TO_VALUE':
         const cardIds = action.payload;
