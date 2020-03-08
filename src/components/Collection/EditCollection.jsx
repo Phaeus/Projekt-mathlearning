@@ -32,6 +32,7 @@ class EditCollection extends Component {
         const { id } = this.props.match.params;
         if(this.props.collections.collection === null || this.props.collections.collection.id !== id){
             await this.props.getCollection(id);
+            this.setState({modus:this.props.collections.collection.modus})
         }
         if (this.props.cards.cardlist === null) {
             await this.props.getCards();
@@ -106,16 +107,18 @@ class EditCollection extends Component {
 
     handleModusChange = (event) => {
         event.preventDefault();
+        console.log(event.target.value)
         return this.setState({modus: event.target.value});
     }
 
     renderModusButtons(){
+        console.log(this.props.collections.collection.modus)
         return(
             <div>
                 <RadioButtonGroup 
                     id="radio-button-group-component-1"
                     options={modi}
-                    value={this.props.collections.collection.modus}
+                    value={this.state.modus}
                     onChange={this.handleModusChange}
                 />
             </div>

@@ -43,6 +43,7 @@ class CreateCollection extends Component {
         const cardIds = this.setCardIds(cardArray);
         if(titleInputVali(this.state.collectionTitle) === null){
             await this.props.addCreatedCollection(this.props.collections.lastCollectionId+1);
+            console.log(cardArray)
             await this.props.createCollection({title: this.state.collectionTitle, randomOrderBool, cardIdList:cardIds, creatorId:this.props.user.user.id, modus: this.state.modus});
             this.props.createCard(cardArray);
             history.push(`/`);
@@ -117,7 +118,6 @@ class CreateCollection extends Component {
                 <div>
                 <Header />
                 <div className="ui container">
-                    
                     <div className="ui segment">
                     <form onSubmit={this.onCollectionSubmit}>
                         <div className="ui input">

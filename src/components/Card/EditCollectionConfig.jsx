@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import './CollectionConfig.css';
 
 const onRandomChange = (props, randomChecked) => {
@@ -9,7 +9,7 @@ const onTimeDisplayChange = (props, timeChecked) => {
 }
 const onTimeChange = (props, event) => {
     event.preventDefault();
-    props.onTimeChange(event.target.value);
+    props.onTimeChange(Number(event.target.value));
 }
 
 export default function EditCollectionConfig(props){

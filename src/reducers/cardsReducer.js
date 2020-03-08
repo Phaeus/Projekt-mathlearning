@@ -1,4 +1,3 @@
-import { updateCard } from "../actions";
 
 const initialState = {
     cardlist: [
@@ -30,13 +29,13 @@ const initialState = {
         return { ...state, card: card};
 
       case 'CREATE_CARD':
-        let nId = 0;
+        let nId = state.lastId;
         const cardArray = action.payload;
         let nList = state.cardlist;
 
         for (let i = 0; i < cardArray.length; i++) {
-          const card = {...cardArray[i], showTimebar:cardArray[i].showTimebar , id:state.lastId+1};
-          nId = state.lastId+1;
+          const card = {...cardArray[i], showTimebar:cardArray[i].showTimebar , id:nId+1};
+          nId = nId+1;
           nList.push(card);
         }
         console.log(nId);
@@ -46,7 +45,6 @@ const initialState = {
         const updatedIdArray = action.payload.cardIds.newCardIds;
         const potDelIds = action.payload.cardIds.deletedEl;
         const updatedCards = action.payload.cardArray;
-        const addedEl = action.payload.newEl;
         let oldCardlist = state.cardlist;
         let lastId = state.lastId;
 

@@ -331,8 +331,6 @@ class CreateCardForm extends Component {
                 <button className="ui button" type="submit">Submit</button>
                 </form>
               </div>
-            
-          
           </div>
           )}
           </Droppable>
