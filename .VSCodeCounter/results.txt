@@ -1,14 +1,14 @@
-Date : 2020-03-08 16:32:49
+Date : 2020-03-08 23:56:33
 Directory : c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning
-Total : 39 files,  17596 codes, 36 comments, 318 blanks, all 17950 lines
+Total : 40 files,  17884 codes, 39 comments, 330 blanks, all 18253 lines
 
 Languages
 +------------------+------------+------------+------------+------------+------------+
 | language         | files      | code       | comment    | blank      | total      |
 +------------------+------------+------------+------------+------------+------------+
-| JSON             |          3 |     14,954 |          0 |          3 |     14,957 |
-| JavaScript React |         19 |      1,995 |         13 |        232 |      2,240 |
-| JavaScript       |          8 |        526 |          0 |         66 |        592 |
+| JSON             |          3 |     15,004 |          0 |          3 |     15,007 |
+| JavaScript React |         20 |      2,147 |         16 |        239 |      2,402 |
+| JavaScript       |          8 |        612 |          0 |         71 |        683 |
 | CSS              |          8 |        100 |          0 |         16 |        116 |
 | HTML             |          1 |         21 |         23 |          1 |         45 |
 +------------------+------------+------------+------------+------------+------------+
@@ -17,59 +17,60 @@ Directories
 +-------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
 | path                                                                                                        | files      | code       | comment    | blank      | total      |
 +-------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
-| .                                                                                                           |         39 |     17,596 |         36 |        318 |     17,950 |
+| .                                                                                                           |         40 |     17,884 |         39 |        330 |     18,253 |
 | public                                                                                                      |          2 |         46 |         23 |          2 |         71 |
-| src                                                                                                         |         35 |      2,621 |         13 |        314 |      2,948 |
-| src\actions                                                                                                 |          1 |        177 |          0 |         25 |        202 |
-| src\components                                                                                              |         27 |      2,104 |         12 |        248 |      2,364 |
-| src\components\Card                                                                                         |         12 |      1,119 |          8 |        129 |      1,256 |
-| src\components\Collection                                                                                   |          7 |        558 |          4 |         73 |        635 |
-| src\components\User                                                                                         |          4 |        317 |          0 |         32 |        349 |
-| src\reducers                                                                                                |          4 |        295 |          0 |         32 |        327 |
+| src                                                                                                         |         36 |      2,859 |         16 |        326 |      3,201 |
+| src\actions                                                                                                 |          1 |        183 |          0 |         26 |        209 |
+| src\components                                                                                              |         28 |      2,256 |         15 |        255 |      2,526 |
+| src\components\Card                                                                                         |         13 |      1,226 |         10 |        138 |      1,374 |
+| src\components\Collection                                                                                   |          7 |        567 |          4 |         72 |        643 |
+| src\components\User                                                                                         |          4 |        353 |          1 |         31 |        385 |
+| src\reducers                                                                                                |          4 |        375 |          0 |         36 |        411 |
 +-------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
 
 Files
 +-------------------------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
 | filename                                                                                                    | language         | code       | comment    | blank      | total      |
 +-------------------------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
-| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\package-lock.json                              | JSON             |     14,884 |          0 |          1 |     14,885 |
-| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\package.json                                   | JSON             |         45 |          0 |          1 |         46 |
+| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\package-lock.json                              | JSON             |     14,933 |          0 |          1 |     14,934 |
+| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\package.json                                   | JSON             |         46 |          0 |          1 |         47 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\public\index.html                              | HTML             |         21 |         23 |          1 |         45 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\public\manifest.json                           | JSON             |         25 |          0 |          1 |         26 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\App.jsx                                    | JavaScript React |         29 |          1 |          4 |         34 |
-| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\actions\index.js                           | JavaScript       |        177 |          0 |         25 |        202 |
-| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Card\AnswerInput.jsx            | JavaScript React |         28 |          0 |          5 |         33 |
+| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\actions\index.js                           | JavaScript       |        183 |          0 |         26 |        209 |
+| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Card\AnswerInput.jsx            | JavaScript React |         28 |          0 |          3 |         31 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Card\Card.css                   | CSS              |          7 |          0 |          0 |          7 |
-| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Card\Card.jsx                   | JavaScript React |        126 |          0 |         16 |        142 |
+| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Card\Card.jsx                   | JavaScript React |        169 |          1 |         21 |        191 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Card\CollectionConfig.css       | CSS              |          9 |          0 |          1 |         10 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Card\CollectionConfig.jsx       | JavaScript React |         70 |          0 |          4 |         74 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Card\CreateCardForm.css         | CSS              |         33 |          0 |          6 |         39 |
-| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Card\CreateCardForm.jsx         | JavaScript React |        329 |          2 |         37 |        368 |
+| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Card\CreateCardForm.jsx         | JavaScript React |        343 |          2 |         36 |        381 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Card\EditCardForm.css           | CSS              |         33 |          0 |          6 |         39 |
-| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Card\EditCardForm.jsx           | JavaScript React |        347 |          2 |         36 |        385 |
+| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Card\EditCardForm.jsx           | JavaScript React |        359 |          2 |         37 |        398 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Card\EditCollectionConfig.jsx   | JavaScript React |         68 |          0 |          4 |         72 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Card\Timebar.jsx                | JavaScript React |         39 |          1 |          5 |         45 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Card\Timer.jsx                  | JavaScript React |         30 |          3 |          9 |         42 |
+| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Card\Timerr.jsx                 | JavaScript React |         38 |          1 |          6 |         45 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Collection\Collection.css       | CSS              |          3 |          0 |          0 |          3 |
-| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Collection\Collection.jsx       | JavaScript React |         80 |          1 |         13 |         94 |
+| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Collection\Collection.jsx       | JavaScript React |         81 |          1 |         13 |         95 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Collection\Collectionlist.jsx   | JavaScript React |         97 |          0 |         13 |        110 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Collection\CreateCollection.css | CSS              |          6 |          0 |          0 |          6 |
-| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Collection\CreateCollection.jsx | JavaScript React |        143 |          0 |         15 |        158 |
+| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Collection\CreateCollection.jsx | JavaScript React |        151 |          0 |         14 |        165 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Collection\EditCollection.jsx   | JavaScript React |        199 |          3 |         25 |        227 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Collection\GameResults.jsx      | JavaScript React |         30 |          0 |          7 |         37 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Header.css                      | CSS              |          0 |          0 |          1 |          1 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\Header.jsx                      | JavaScript React |         49 |          0 |          7 |         56 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\MainPage.jsx                    | JavaScript React |         23 |          0 |          2 |         25 |
-| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\User\Login.jsx                  | JavaScript React |         69 |          0 |          8 |         77 |
-| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\User\Signin.jsx                 | JavaScript React |         86 |          0 |          9 |         95 |
+| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\User\Login.jsx                  | JavaScript React |         83 |          0 |          8 |         91 |
+| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\User\Signin.jsx                 | JavaScript React |        109 |          1 |          8 |        118 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\User\User.css                   | CSS              |          9 |          0 |          2 |         11 |
-| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\User\User.jsx                   | JavaScript React |        153 |          0 |         13 |        166 |
+| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\User\User.jsx                   | JavaScript React |        152 |          0 |         13 |        165 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\components\ValidationHelper.js             | JavaScript       |         38 |          0 |          4 |         42 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\history.js                                 | JavaScript       |          2 |          0 |          2 |          4 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\index.js                                   | JavaScript       |         14 |          0 |          3 |         17 |
-| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\reducers\cardsReducer.js                   | JavaScript       |         89 |          0 |         12 |        101 |
-| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\reducers\collectionReducer.js              | JavaScript       |         81 |          0 |          6 |         87 |
+| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\reducers\cardsReducer.js                   | JavaScript       |         87 |          0 |         12 |         99 |
+| c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\reducers\collectionReducer.js              | JavaScript       |        163 |          0 |         10 |        173 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\reducers\index.js                          | JavaScript       |          8 |          0 |          3 |         11 |
 | c:\Users\philipp\Desktop\Informatik-Projektkurs\mathlearning\src\reducers\userReducer.js                    | JavaScript       |        117 |          0 |         11 |        128 |
-| Total                                                                                                       |                  |     17,596 |         36 |        318 |     17,950 |
+| Total                                                                                                       |                  |     17,884 |         39 |        330 |     18,253 |
 +-------------------------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+

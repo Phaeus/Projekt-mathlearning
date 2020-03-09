@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {RadioButtonGroup} from 'react-rainbow-components';
 
 import history from '../../history';
-import { createCollection, getCollections, createCard, getCards, addCreatedCollection, getLastCollectionId, getUser} from '../../actions';
+import { getLoginSuccess, createCollection, getCollections, createCard, getCards, addCreatedCollection, getLastCollectionId, getUser} from '../../actions';
 import CreateCardForm from '../Card/CreateCardForm';
 import './CreateCollection.css';
 import Header from '../Header';
@@ -38,13 +38,16 @@ class CreateCollection extends Component {
         if(this.props.user.user === null){
             await this.props.getUser();
         }
+        if(this.props.user.loginSuccess === null){
+            await this.props.getLoginSuccess();
+        }
     }
-    async onCollectionSubmit(cardArray, randomOrderBool) {
+    async onCollectionSubmit(cardArray, randomOrderBool, description) {
         const cardIds = this.setCardIds(cardArray);
         if(titleInputVali(this.state.collectionTitle) === null){
             await this.props.addCreatedCollection(this.props.collections.lastCollectionId+1);
             console.log(cardArray)
-            await this.props.createCollection({title: this.state.collectionTitle, randomOrderBool, cardIdList:cardIds, creatorId:this.props.user.user.id, modus: this.state.modus});
+            await this.props.createCollection({title: this.state.collectionTitle, randomOrderBool, cardIdList:cardIds, creatorId:this.props.user.user.id, modus: this.state.modus, descrption:description});
             this.props.createCard(cardArray);
             history.push(`/`);
         }
@@ -112,6 +115,10 @@ class CreateCollection extends Component {
                 <div> Loading...</div>
             )
         }
+        else if(!this.props.user.loginSuccess){
+            history.push(`/`);
+            return <div/>
+        }
         else{
             console.log(this.props.cards);
             return(
@@ -151,7 +158,8 @@ const mapDispatchToProps = {
     createCard: createCard,
     addCreatedCollection:addCreatedCollection,
     getLastCollectionId,
-    getUser
+    getUser,
+    getLoginSuccess
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateCollection);

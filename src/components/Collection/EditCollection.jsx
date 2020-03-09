@@ -48,11 +48,11 @@ class EditCollection extends Component {
 
     //Das löschen von Karten funktioniert noch nicht
 
-    async onCollectionSubmit(cardArray, randomOrderBool) {
+    async onCollectionSubmit(cardArray, randomOrderBool, description) {
         const cardIds = this.setCardIds(cardArray);
         console.log(cardIds)
         if(titleInputVali(this.state.collectionTitle) === null){
-            this.props.updateCollection({title: this.state.collectionTitle, randomOrderBool, cardIdList:cardIds.newCardIds, creatorId:this.props.user.user.id, modus: this.state.modus, id: Number(this.props.match.params.id)});
+            this.props.updateCollection({title: this.state.collectionTitle, randomOrderBool, cardIdList:cardIds.newCardIds, creatorId:this.props.user.user.id, modus: this.state.modus, id: Number(this.props.match.params.id), description:description});
             this.props.updateCard({cardIds, cardArray});
             history.push(`/`);
         }
@@ -195,7 +195,7 @@ class EditCollection extends Component {
                     </ form>
                     {this.renderModusButtons()}
                     {console.log(this.props.cards.idsToValueArray)}
-                        <EditCardForm lastId={this.findLastId()} randomOrderBool={this.props.collections.collection.randomOrderBool} cardArray={this.props.cards.idsToValueArray} onSubmit={this.onCollectionSubmit} modus={this.state.modus} showValidation={this.state.showValidation}/>
+                        <EditCardForm description={this.props.collections.collection.description} lastId={this.findLastId()} randomOrderBool={this.props.collections.collection.randomOrderBool} cardArray={this.props.cards.idsToValueArray} onSubmit={this.onCollectionSubmit} modus={this.state.modus} showValidation={this.state.showValidation}/>
                     </div>
                     </div>
                 </div>

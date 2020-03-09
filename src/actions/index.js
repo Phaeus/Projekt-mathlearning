@@ -44,6 +44,13 @@ export const getCollections = () => async dispatch => {
         })
   }
 
+  export const setCollectionStats = (answers) => async dispatch => {
+      dispatch({
+          type:'SET_COLLECTION_STATS',
+          payload:answers
+      })
+  }
+
   export const getCards = () => async dispatch => {
       const response = [];
       dispatch({

@@ -24,6 +24,7 @@ class CreateCardForm extends Component {
           showConfig:false,
           showQuestionValidation: false,
           showAnswerValidation: false,
+          descripton: "",
           errors: false
                 }
         this.onDragEnd =  this.onDragEnd.bind(this);
@@ -196,7 +197,7 @@ class CreateCardForm extends Component {
           }
         }
         if(submit){
-          this.props.onSubmit(this.state.cards, this.state.randomOrderBool);
+          this.props.onSubmit(this.state.cards, this.state.randomOrderBool, this.state.descripton);
         }
     }
 
@@ -229,6 +230,10 @@ class CreateCardForm extends Component {
       else{
         return false
       }
+    }
+
+    handleDescriptionChange = (event) => {
+      this.setState({description: event.target.value})
     }
 
     renderBars(){
@@ -328,7 +333,17 @@ class CreateCardForm extends Component {
                 {provided.placeholder}
                 </div>
                 </div>
+                <div className="ui input">
+                  <input
+                  value={this.state.description}
+                  type="text"
+                  placeholder="Description"
+                  onChange={this.handleDescriptionChange}
+                  />
+                </div>
+                <div>
                 <button className="ui button" type="submit">Submit</button>
+                </div>
                 </form>
               </div>
           </div>
