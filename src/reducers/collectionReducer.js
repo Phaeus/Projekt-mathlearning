@@ -8,7 +8,7 @@ const initialState = {
     description: "HALla",
     correctAnswerAverage: 2,
     playedBy: [0],
-    bestPlayers: [{ userId: 0, time: 2000 }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }],
+    bestPlayers: [{ userId: 0, points: 2000 }, { userId: null, points: null }, { userId: null, points: null }, { userId: null, points: null }, { userId: null, points: null }, { userId: null, points: null }, { userId: null, points: null }, { userId: null, points: null }, { userId: null, points: null }, { userId: null, points: null }],
     player: 1,
     id: 1
   },
@@ -20,7 +20,7 @@ const initialState = {
     modus: "Timermodus",
     description: "HALla",
     correctAnswerAverage: 3,
-    timeAverage: 1500,
+    timeAverage: 2000,
     playedBy: [0],
     bestPlayers: [{ userId: 0, time: 2000 }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }],
     player: 1,
@@ -64,15 +64,19 @@ export default (state = initialState, action) => {
       let newCollection = null;
       if (createdCollection.modus === "Timermodus") {
         newCollection = {
-          ...createdCollection, id: state.lastCollectionId + 1, cardIdList: createdCollection.cardIdList, creatorId: createdCollection.creatorId, playedBy: null, player: 0,
+          ...createdCollection,
+          id: state.lastCollectionId + 1,
+          cardIdList: createdCollection.cardIdList,
+          creatorId: createdCollection.creatorId,
+          playedBy: [], player: 0,
           bestPlayers: [{ userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }],
           correctAnswerAverage: null, timeAverage: null, description: createdCollection.description
         };
       }
       else if (createdCollection.modus === "Countdownmodus") {
         newCollection = {
-          ...createdCollection, id: state.lastCollectionId + 1, cardIdList: createdCollection.cardIdList, creatorId: createdCollection.creatorId, playedBy: null,
-          player: 0, bestPlayers: [{ userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }, { userId: null, time: null }],
+          ...createdCollection, id: state.lastCollectionId + 1, cardIdList: createdCollection.cardIdList, creatorId: createdCollection.creatorId, playedBy: [],
+          player: 0, bestPlayers: [{ userId: null, points: null }, { userId: null, points: null }, { userId: null, points: null }, { userId: null, points: null }, { userId: null, points: null }, { userId: null, points: null }, { userId: null, points: null }, { userId: null, points: null }, { userId: null, points: null }, { userId: null, points: null }],
           correctAnswerAverage: null, description: createdCollection.description
         };
       }
@@ -113,8 +117,9 @@ export default (state = initialState, action) => {
       return { ...state, collectionlist: deletedCollectionList }
 
     case 'SET_COLLECTION_STATS':
-      console.log(action.payload)
+      console.log("Payload",action.payload)
       const stats = action.payload;
+      console.log("State",state)
       let statCollection = state.collectionlist.find(collection => collection.id === stats.collectionId);
       let correctAnswerAverage = statCollection.correctAnswerAverage;
       let playedBy = statCollection.playedBy;
@@ -125,7 +130,7 @@ export default (state = initialState, action) => {
           timeAverage = stats.time;
         }
         else {
-          timeAverage = Math.round(((timeAverage + stats.time) / (statCollection.playedBy.length + 1)) * 100) / 100;
+          timeAverage = Math.round(((timeAverage + stats.time) / (statCollection.player + 1)) * 100) / 100;
         }
         let newCorrectAverage = 0;
         for (let i = 0; i < stats.correctAnswerArray.length; i++) {
@@ -141,55 +146,83 @@ export default (state = initialState, action) => {
         }
 
         let bestPlayers = statCollection.bestPlayers;
-        let p1;
-        let p2;
-        if (newCorrectAverage === stats.correctAnswerArray.length)
-          for (let i = 0; i < statCollection.bestPlayers.length; i++) {
-            if (bestPlayers[i].time >= stats.time) {
-              p1 = bestPlayers.splice(0, i)
-              p2 = bestPlayers.splice(i, bestPlayers.length)
-              bestPlayers = p1.concat({ userId: stats.userId, time: stats.time }, p2);
-              bestPlayers.pop();
-              break;
+        let newBestPlayers = []
+        console.log(bestPlayers.length, newCorrectAverage, stats.correctAnswerArray, stats.time)
+        if (newCorrectAverage === stats.correctAnswerArray.length) {
+          let setted = false;
+          for (let i = 0; i < bestPlayers.length; i++) {
+            if (bestPlayers[i].time > stats.time && !setted) {
+              newBestPlayers.push({ userId: stats.userId, time: stats.time });
+              setted=true
+              i = i-1
             }
-            else if (bestPlayers[i].time === null) {
-              bestPlayers[i] = { userId: stats.userId, time: stats.time }
-              break
+            else if(bestPlayers[i].time === null && !setted){
+              newBestPlayers.push({ userId: stats.userId, time: stats.time });
+              setted = true
+              i=i-1
             }
+            else{
+              newBestPlayers.push(bestPlayers[i])
+            }
+            console.log("BestPlayers:",newBestPlayers)
           }
-        statCollection = { ...statCollection, correctAnswerAverage, timeAverage, bestPlayers }
+          newBestPlayers.pop()
+          statCollection = { ...statCollection, correctAnswerAverage, timeAverage, bestPlayers:newBestPlayers }
+        }
+        console.log("New Collection",statCollection)
       }
       else if (statCollection.modus === "Countdownmodus") {
-        let newCorrectAverage = 0;
+        let correctCounter = 0;
+        const maxTimepoints = 2000;
+        let points=0;
+        points = points + Math.round(( stats.userTime/(stats.wholeTime*1000))*maxTimepoints);
+        console.log(stats.wholeTime,stats.userTime,points)
         for (let i = 0; i < stats.correctAnswerArray.length; i++) {
           if (stats.correctAnswerArray[i].correct === true) {
-            newCorrectAverage = newCorrectAverage + 1;
+            correctCounter = correctCounter + 1;
+            points = points +100;
           }
         }
         if (correctAnswerAverage === null) {
-          correctAnswerAverage = newCorrectAverage;
+          correctAnswerAverage = correctCounter;
         }
         else {
-          correctAnswerAverage = Math.round(((newCorrectAverage + correctAnswerAverage) / 2) * 100) / 100;
+          correctAnswerAverage = Math.round(((correctCounter + correctAnswerAverage) / 2) * 100) / 100;
         }
+
         let bestPlayers = statCollection.bestPlayers;
-        let p1;
-        let p2;
-        if (newCorrectAverage === stats.correctAnswerArray.length)
+        let newBestPlayers = []
+        let setted = false;
           for (let i = 0; i < statCollection.bestPlayers.length; i++) {
-            if (bestPlayers[i].time >= stats.time) {
+            if (bestPlayers[i].points < points && !setted) {
+              newBestPlayers.push({ userId: stats.userId, points: points});
+              setted=true
+              i = i-1
+            }
+            else if(bestPlayers[i].points === null && !setted){
+              newBestPlayers.push({ userId: stats.userId, points: points });
+              setted = true
+              i=i-1
+            }
+            else{
+              newBestPlayers.push(bestPlayers[i])
+            }
+
+            /*
+            if (bestPlayers[i].points >= points) {
               p1 = bestPlayers.splice(0, i)
               p2 = bestPlayers.splice(i, bestPlayers.length)
-              bestPlayers = p1.concat({ userId: stats.userId, time: stats.time }, p2);
+              bestPlayers = p1.concat({ userId: stats.userId, points: points }, p2);
               bestPlayers.pop();
               break;
             }
-            else if (bestPlayers[i].time === null) {
-              bestPlayers[i] = { userId: stats.userId, time: stats.time }
+            else if (bestPlayers[i].points === null) {
+              bestPlayers[i] = { userId: stats.userId, points: points }
               break
-            }
+            } */
           }
-        statCollection = { ...statCollection, correctAnswerAverage, bestPlayers }
+          newBestPlayers.pop()
+        statCollection = { ...statCollection, correctAnswerAverage, bestPlayers: newBestPlayers }
       }
 
       statCollection = { ...statCollection, player: statCollection.player + 1, playedBy: playedBy }

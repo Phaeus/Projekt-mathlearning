@@ -15,7 +15,8 @@ class Collection extends Component {
       collectionId: null,
       cardIdList: [],
       showButton: true,
-      bestPlayers: null
+      bestPlayers: null,
+      showUserStats:false
     }
   }
   async componentDidMount() {
@@ -26,11 +27,15 @@ class Collection extends Component {
       await this.props.getUserlist()
     }
 
+    if(this.props.user.user !== null && this.props.user.loginSuccess){
+      this.setState({showUserStats:true})
+    }
+
     const { id } = this.props.match.params;
     this.setState({ collectionId: id });
     await this.props.getCollection(id);
     console.log(this.props.collections)
-    if (this.props.collections.collection.modus !== "Leaningmodus") {
+    if (this.props.collections.collection.modus !== "Learningmodus") {
       this.setBestPlayers()
     }
   }
@@ -57,18 +62,48 @@ class Collection extends Component {
     }
   }
 
+  getUsernameFromId = (id) => {
+    console.log(this.props.user)
+    return this.props.user.userlist.find(user => user.id === id).username;
+  }
+
   setBestPlayers = () => {
     const { bestPlayers } = this.props.collections.collection;
+    console.log(this.props.collections.collection)
     let bestPlayer = [];
     for (let i = 0; i < bestPlayers.length; i++) {
       if (bestPlayers[i].userId === null) {
-        bestPlayer.push({ place: i, userId: "---", time: "---" })
+        if(this.props.collections.collection.modus === "Timermodus"){
+          bestPlayer.push({ place: i+1, userId: "---", time: "---" })
+        }
+        else{
+          bestPlayer.push({ place: i+1, userId: "---", points: "---" })
+        }
       }
       else {
-        bestPlayer.push({ place: i, userId: "" + bestPlayers[i].userId, time: "" + this.msToTime(bestPlayers[i].time) })
+        if(this.props.collections.collection.modus === "Timermodus"){
+          bestPlayer.push({ place: i+1, userId: "" + this.getUsernameFromId(bestPlayers[i].userId), time: "" + this.msToTime(bestPlayers[i].time) })
+        }
+        else{
+          bestPlayer.push({ place: i+1, userId: "" + this.getUsernameFromId(bestPlayers[i].userId), points: ""+ bestPlayers[i].points })
+        }
       }
     }
+    console.log(bestPlayer)
     this.setState({ bestPlayer })
+  }
+
+  renderUserStats(){
+    if(this.state.showUserStats){
+      return(
+        <div>
+          
+        </div>
+      )
+    }
+    else{
+      return <div/>
+    }
   }
 
   renderStartGame() {
@@ -98,12 +133,22 @@ class Collection extends Component {
           <div>{collection.description}</div>
           <div>Played: {collection.player}</div>
           <div>{collection.modus}</div>
-          {collection.modus !== "Learnmodus" ? (
+          {collection.modus === "Timermodus" ? (
             <div>
-              <Table data={this.state.bestPlayer} keyField="id">
+              <div>Timeaverage: {this.msToTime(collection.timeAverage)}</div>
+              <Table data={this.state.bestPlayer} keyField="{collection.id}">
                 <Column header="Place" field="place" />
                 <Column header="Player" field="userId" />
                 <Column header="Time" field="time" />
+              </Table>
+            </div>
+          ) : (<div />)}
+          {collection.modus === "Countdownmodus" ? (
+            <div>
+              <Table data={this.state.bestPlayer} keyField="g">
+                <Column header="Place" field="place" />
+                <Column header="Player" field="userId" />
+                <Column header="Points" field="points" />
               </Table>
             </div>
           ) : (<div />)}
@@ -122,6 +167,7 @@ class Collection extends Component {
         <div>
           <Header />
           <div className="ui container" id="container">
+            {this.renderUserStats()}
             {this.renderCollectionInfos()}
             {this.renderStartGame()}
             <button className="ui button" onClick={() => { history.push(`/`) }}>Zurück zur Liste</button>

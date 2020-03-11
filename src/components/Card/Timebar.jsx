@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import {Progress} from 'semantic-ui-react'
 import Countdown from 'react-countdown';
 
@@ -6,13 +6,17 @@ export default function Timebar(props){
 
     //let [time, setTime] = useState(props.time*1000);
 
-    const setCompleted = () => {
-        props.setCompleted();
+    const setCompleted = (time) => {
+        props.setCompleted(time);
     }
 
     const renderer = ({hours, minutes, seconds, milliseconds, completed}) => {
-        if(completed){
-            setCompleted();
+        if(props.stopTimebar){
+            setCompleted((hours*60*60)+(minutes*60)+(seconds)+(milliseconds));
+            return <div></div>
+        }
+        else if(completed){
+            setCompleted((hours*60*60)+(minutes*60)+(seconds)+(milliseconds));
             return <div>Halla</div>
         }
         else{

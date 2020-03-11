@@ -6,13 +6,14 @@ export default function AnswerInput(props){
     const saveAnswer = (event) => {
         event.preventDefault();
         console.log(answer);
-        props.saveAnswer(answer);
+        props.saveAnswer();
         setAnswer("");
     }
     const handleAnswerChange = (event) => {
-        event.preventDefault();
         console.log(event.target.value)
-        setAnswer(event.target.value);
+        event.preventDefault()
+        props.handleAnswerChange(event.target.value);
+        setAnswer(event.target.value)
       }
     
     return(

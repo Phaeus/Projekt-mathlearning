@@ -31,6 +31,8 @@ class User extends Component{
         this.setState({username});
         await this.props.getUser(username);
         console.log(this.props.user.loginSuccess)
+
+
         if(this.props.user.loginSuccess){
             this.setState({loginSuccess: this.props.user.loginSuccess})
             this.getCollections(this.props.user.user.createdCollection, "created");
@@ -50,13 +52,16 @@ class User extends Component{
         const collectionIds = collections;
         let selectedCollection = [];
         const allCollections = this.props.collections.collectionlist;
-        for (let i = 0; i < collectionIds.length; i++) {
-            selectedCollection.push(allCollections.find(coll => coll.id === collectionIds[i]));
-        }
         if(whichCollection === "created"){
+            for (let i = 0; i < collectionIds.length; i++) {
+                selectedCollection.push(allCollections.find(coll => coll.id === collectionIds[i]));
+            }
             this.setState({createdCollection: selectedCollection});
         }
         else{
+            for (let i = 0; i < collectionIds.length; i++) {
+                selectedCollection.push(allCollections.find(coll => coll.id === collectionIds[i].collectionId));
+            }
             this.setState({playedCollection: selectedCollection})
         }
       }
@@ -87,7 +92,7 @@ class User extends Component{
                 <div>
                 {this.state.createdCollection.map(collection => {
                     return(
-                        <div className="ui segment" id="collection" key={collection.id}>
+                        <div className="ui segment" id="collection" key={collection.id} onClick={() => {history.push(`/collections/${collection.id}`)}}>
                             {collection.title} Anzahl Karten:{collection.cardIdList.length} Creator:{this.findCreator(collection.creatorId)} Modus:{collection.modus}
                             <i className="edit icon" id="edit" onClick={e => this.handleEditOnClick(e, collection.id)}></i>
                             <i className="trash alternate icon" id="delete" onClick={e => this.handleDeleteOnClick(e, collection.id, collection.cardIdList)}></i>
@@ -105,9 +110,10 @@ class User extends Component{
         if(this.state.playedCollectionCollection !== null){
             return(
                 <div>
+                    {console.log(this.state.playedCollection)}
                 {this.state.playedCollection.map(collection => {
                     return(
-                        <div className="ui segment" id="collection" key={collection.id}>
+                        <div className="ui segment" id="collection" key={collection.collectionId}>
                             {collection.title} Anzahl Karten:{collection.cardIdList.length} Creator:{this.findCreator(collection.creatorId)} Modus:{collection.modus}
                         </div>
                     )

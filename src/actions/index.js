@@ -181,11 +181,11 @@ export const getCollections = () => async dispatch => {
       })
   }
 
-  export const addPlayedCollection = (collectionId) => async dispatch => {
+  export const addPlayedCollection = (answers) => async dispatch => {
       console.log("Halla")
       dispatch({
           type:'ADD_PLAYED_COLLECTION',
-          payload:collectionId
+          payload:answers
       })
   }
 
