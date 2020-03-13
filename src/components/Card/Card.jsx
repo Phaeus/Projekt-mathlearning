@@ -4,7 +4,7 @@ import Mathjax from 'react-mathjax-preview'
 import { Progress } from 'semantic-ui-react'
 
 import history from '../../history';
-import { getCard, getCards, getUser, addPlayedCollection, setCollectionStats } from '../../actions';
+import { getCard, getCards,  addPlayedCollection, setCollectionStats, setGuestStats} from '../../actions';
 import './Card.css';
 import AnswerInput from './AnswerInput';
 
@@ -26,73 +26,83 @@ class Card extends Component {
       countdownOn: false,
       countStart: 0,
       countTime: 0,
-      userTime:0
+      userTime:0,
+      currentIndex:0
     }
-
+    this.countdown = null;
     this.saveAnswer = this.saveAnswer.bind(this);
   }
   async componentDidMount() {
     if (this.props.cards.cardlist === null) {
       await this.props.getCards();
     }
-    if (this.props.user.user === null) {
-      await this.props.getUser();
-    }
     await this.getCardsFromIds();
     if (this.props.modus === "Timermodus") {
       this.startTimer();
     }
-    console.log(this.state)
-    if (this.props.modus === "Countdownmodus" && this.state.cards !== null) {
+    if (this.props.modus === "Countdownmodus" && this.state.cards !== null && this.state.cards[this.state.currentIndex].showTimebar) {
       this.startCountdown();
-      
+      //this.setState({currentIndex:1, cardCounter: 1})
     }
-    console.log(this.props)
-    console.log(this.state)
   }
 
   async componentWillUnmount() {
     if (this.props.modus === "Timermodus") {
-      this.stopTimer()
+      clearInterval(this.timer);
     }
     else if (this.props.modus === "Countdownmodus") {
-      this.stopCountdown()
+      //this.stopCountdown()
+      clearInterval(this.timer);
     }
 
-    if (this.props.user.loginSuccess) {
       if (this.props.modus === "Timermodus") {
-        //add Timestatistics + right answers + scoreboard
         let correctedAnswers = this.setCorrectAnswers();
         correctedAnswers = { ...correctedAnswers, collectionId: Number(this.props.id) }
-        console.log(correctedAnswers)
-
-        this.props.addPlayedCollection(correctedAnswers);
-        correctedAnswers = { ...correctedAnswers, userId: this.props.user.user.id, modus: this.props.modus }
-        await this.props.setCollectionStats(correctedAnswers);
-        console.log("Haaaaaaaaaaaaaa", correctedAnswers)
+        if(this.props.user.loginSuccess){
+          this.props.addPlayedCollection(correctedAnswers);
+          correctedAnswers = { ...correctedAnswers, userId: this.props.user.user.id, modus: this.props.modus }
+          await this.props.setCollectionStats(correctedAnswers);
+        }
+        else{
+          this.props.setGuestStats(correctedAnswers);
+          correctedAnswers = { ...correctedAnswers, userId: -1, modus: this.props.modus }
+          await this.props.setCollectionStats(correctedAnswers);
+        }
       }
       else if (this.props.modus === "Countdownmodus") {
         let correctedAnswers = this.setCorrectAnswers();
         correctedAnswers = { ...correctedAnswers, collectionId: Number(this.props.id) }
-        console.log(correctedAnswers)
-        this.props.addPlayedCollection(correctedAnswers);
-        correctedAnswers = { ...correctedAnswers, userId: this.props.user.user.id, modus: this.props.modus }
-        this.props.setCollectionStats(correctedAnswers);
-
+        if(this.props.user.loginSuccess){
+          this.props.addPlayedCollection(correctedAnswers);
+          correctedAnswers = { ...correctedAnswers, userId: this.props.user.user.id, modus: this.props.modus }
+          await this.props.setCollectionStats(correctedAnswers);
+        }
+        else{
+          this.props.setGuestStats(correctedAnswers);
+          correctedAnswers = { ...correctedAnswers, userId: -1, modus: this.props.modus }
+          await this.props.setCollectionStats(correctedAnswers);
+        }
       }
       else {
-        this.props.addPlayedCollection({collectionId:Number(this.props.id)});
-        this.props.setCollectionStats({collectionId: Number(this.props.id), })
+        if(this.props.user.loginSuccess){
+          this.props.addPlayedCollection({collectionId:Number(this.props.id)});
+          this.props.setCollectionStats({collectionId: Number(this.props.id), userId: this.props.user.user.id})
+        }
+        else{
+          this.props.setGuestStats({collectionId:Number(this.props.id)});
+          this.props.setCollectionStats({collectionId: Number(this.props.id), userId:-1})
+        }
       }
-    }
   }
 
   startCountdown = () => {
-    console.log(this.state.cards[this.state.cardCounter].displayTime)
+    console.log(this.state.currentIndex)
+    console.log(this.state.cards)
+    console.log(this.state.cards[this.state.currentIndex].displayTime)
     this.setState({
       countdownOn: true,
-      countTime: this.state.cards[this.state.cardCounter].displayTime * 1000,
-      countStart: this.state.cards[this.state.cardCounter].displayTime * 1000
+      countTime: this.state.cards[this.state.currentIndex].displayTime * 1000,
+      countStart: this.state.timerTime //this.state.cards[this.state.currentIndex].displayTime * 1000
     })
     this.countdown = setInterval(() => {
       const newTime = this.state.countTime - 100;
@@ -102,18 +112,14 @@ class Card extends Component {
         })
       }
       else {
-        console.log("halla")
-        this.setState({ countdownOn: false })
         this.saveAnswer();
       }
-      console.log(newTime)
     }
       , 100)
   }
 
   stopCountdown = () => {
     clearInterval(this.countdown);
-    console.log(this.state.countTime)
     this.setState({ countdownOn: false, countTime: this.state.timerStart })
   }
 
@@ -123,17 +129,17 @@ class Card extends Component {
     for (let i = 0; i < cardIdList.length; i++) {
       cards.push(this.props.cards.cardlist.find(tar => tar.id === cardIdList[i]));
     }
-    console.log(cards)
     this.setState({ cards: cards });
   }
 
-  saveAnswer = () => {
+  async saveAnswer() {
     let answers = this.state.answers;
     answers.push(this.state.currentAnswer)
     this.setState({answers})
-    this.setState({ cardCounter: this.state.cardCounter + 1 });
+    
+    await this.setState({cardCounter: this.state.cardCounter + 1, currentIndex: this.state.currentIndex + 1});
     if (this.props.modus === "Timermodus") {
-      if (this.state.cardCounter === this.state.cards) {
+      if (this.state.cardCounter >= this.state.cards.length) {
         this.setState({ timerStatus: false });
         this.stopTimer()
       }
@@ -141,11 +147,10 @@ class Card extends Component {
     if (this.props.modus === "Countdownmodus") {
       this.setState({userTime: this.state.countTime + this.state.userTime})
       this.stopCountdown()
-      if (this.state.cardCounter !== this.state.cards) {
+      if (this.state.cardCounter < this.state.cards.length && this.state.cards[this.state.currentIndex].showTimebar) {
         this.startCountdown();
       }
     }
-    console.log(this.state.answers)
   }
 
   handleAnswerChange = (answer) => {
@@ -153,13 +158,13 @@ class Card extends Component {
   }
 
   renderCard() {
-    const { cards, cardCounter } = this.state;
+    const { cards, currentIndex, cardCounter} = this.state;
     if (cardCounter < cards.length) {
       return (
         <div>
           <div className="ui segment">
             <div className="card">
-              <Mathjax math={"`" + cards[cardCounter].question + "`"} />
+              <Mathjax math={"`" + cards[currentIndex].question + "`"} />
             </div>
 
           </div>
@@ -170,14 +175,12 @@ class Card extends Component {
   }
 
   setCompleted = (time) => {
-    console.log(this.state.answers)
     let answers = this.state.answers;
     answers.push(answers)
-    console.log(answers)
+
     this.setState({ answers });
     this.setState({ cardCounter: this.state.cardCounter + 1 });
     this.setState({ time, stopTimebar: false });
-    console.log(time)
   }
 
 
@@ -229,14 +232,13 @@ class Card extends Component {
       }
       correctAnswers = { correctAnswerArray, wholeTime,userTime: this.state.userTime}
     }
-    console.log(correctAnswers)
     return correctAnswers;
   }
 
   renderBar = () => {
-    const { cards, cardCounter } = this.state;
+    const { cards, cardCounter, currentIndex } = this.state;
     if (cardCounter < cards.length) {
-      if ((!cards[cardCounter].showTimebar && this.props.modus === "Countdownmodus") || this.props.modus === "Learningmodus" || (cards[cardCounter].displayTime === 0 && this.props.modus === "Countdownmodus")) {
+      if ((!cards[currentIndex].showTimebar && this.props.modus === "Countdownmodus") || this.props.modus === "Learningmodus" || (cards[currentIndex].displayTime === 0 && this.props.modus === "Countdownmodus")) {
         return <div></div>
       }
       else if (this.props.modus === "Timermodus") {
@@ -244,12 +246,14 @@ class Card extends Component {
       }
       else {
         return (
+          <div>
           <Progress
             progress='value'
             value={this.state.countTime / 1000}
-            total={cards[cardCounter].displayTime}
+            total={cards[currentIndex].displayTime}
             color='blue'
           />
+          </div>
         )
       }
     }
@@ -293,9 +297,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   getCard: getCard,
   getCards: getCards,
-  getUser: getUser,
   addPlayedCollection: addPlayedCollection,
   setCollectionStats,
+  setGuestStats
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Card);

@@ -84,7 +84,13 @@ class User extends Component{
         event.stopPropagation();
         history.push(`${this.state.username}/editCollection/${collectionId}`)
     }
+    
 
+    handleStatsOnClick = (event, collectionId) => {
+        event.stopPropagation();
+        history.push(`/collections/${collectionId}/${this.state.username}`)
+    }
+ 
     renderCreatedCollection(){
         console.log("Hee")
         if(this.state.createdCollection !== null){
@@ -113,8 +119,9 @@ class User extends Component{
                     {console.log(this.state.playedCollection)}
                 {this.state.playedCollection.map(collection => {
                     return(
-                        <div className="ui segment" id="collection" key={collection.collectionId}>
+                        <div className="ui segment" id="collection" key={collection.collectionId} onClick={() => {history.push(`/collections/${collection.id}`)}}>
                             {collection.title} Anzahl Karten:{collection.cardIdList.length} Creator:{this.findCreator(collection.creatorId)} Modus:{collection.modus}
+                            <i className="chart bar icon" id="stats" onClick={e => this.handleStatsOnClick(e, collection.id)}></i>
                         </div>
                     )
                 })} </div>

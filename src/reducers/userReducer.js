@@ -62,6 +62,7 @@ const initialState = {
     user: null,
     loginSuccess: false,
     usernameAvailable: false,
+    guest:null
 };
 
 export default (state = initialState, action) => {
@@ -124,6 +125,10 @@ export default (state = initialState, action) => {
                 }
             }
             return { ...state, usernameAvailable: true, loginSuccess: true }
+        
+        case 'SET_GUEST_STATS':
+            console.log(action.payload)
+            return {...state, guest:action.payload}
 
         case "ADD_PLAYED_COLLECTION":
             console.log(action.payload)
@@ -174,16 +179,13 @@ export default (state = initialState, action) => {
             let deUserList = state.userlist;
             for (let i = 0; i < deUserList.length; i++) {
                 for (let a = 0; a < deUserList[i].playedCollection.length; a++) {
-                    if (deUserList[i].playedCollection[a] === deCollId) {
-                        let nePlayedList = deUserList[i].playedCollection.filter(coll => coll !== deCollId);
+                    if (deUserList[i].playedCollection[a].collectionId === deCollId) {
+                        let nePlayedList = deUserList[i].playedCollection.filter(coll => coll.collectionId !== deCollId);
                         deUserList[i] = { ...deUserList[i], playedCollection: nePlayedList }
                     }
                 }
             }
             return { ...state, userlist: deUserList }
-        case 'SET_USER_STATS':
-            let answers = action.payload;
-
         default:
             return state;
     }

@@ -11,34 +11,32 @@ class GameResults extends Component {
         super(props);
         this.state = {
             bestPlayer: null,
-            collectionId:null,
-            seCollection:null,
-            cards:null
+            collectionId: null,
+            seCollection: null,
+            cards: null,
+            userPoints: 0
         }
     }
 
     async componentDidMount() {
         const { id } = this.props.match.params;
-        this.setState({collectionId:id})
-        if(this.props.collections.collectionlist=== null){
+        this.setState({ collectionId: id })
+        if (this.props.collections.collectionlist === null) {
             await this.props.getCollections()
         }
-        if(this.props.cards.cardlist === null){
+        if (this.props.cards.cardlist === null) {
             await this.props.getCards()
         }
         await this.props.getCollection(id);
-        console.log(this.props.collections.collection)
 
-        if (this.props.user.user === null) {
+        if (this.props.user.user === null && this.props.user.guest === null) {
             history.push(`/`)
         }
         if (this.props.collections.collection.modus !== "Learningmodus") {
             this.setBestPlayers()
         }
-        if(this.props.user.user !== null){
-            this.findUserPlayedCollection();
+            await this.findUserPlayedCollection();
             this.findCardFromUser()
-        }
     }
 
     msToTime = (ms) => {
@@ -46,23 +44,48 @@ class GameResults extends Component {
     }
 
     findUserPlayedCollection = () => {
-        const { user } = this.props.user
-        let {collection} = this.props.collections
-        console.log(user.playedCollection.find(arr => arr.collectionId === collection.id))
-        this.setState({seCollection: user.playedCollection.find(arr => arr.collectionId === collection.id)})
-    }
-
-    findCardFromUser = () =>{
-        const {cardlist} = this.props.cards
-        const {seCollection} = this.state;
-        let cards = []
-        for (let i = 0; i < seCollection.correctAnswerArray.length; i++) {
-            cards.push(cardlist.find(card => card.id === seCollection.correctAnswerArray[i].cardId))
+        let { user } = this.props.user
+        let { collection } = this.props.collections
+        let userPoints = 0;
+        let seCollection = null
+        if (user !== null && this.props.user.guest === null) {
+            user.playedCollection.reverse();
+            userPoints = 0;
+            seCollection = user.playedCollection.find(arr => arr.collectionId === collection.id)
         }
-        this.setState({cards})
+        else{
+            seCollection = this.props.user.guest;
+        }
+        if (this.props.collections.collection.modus === "Countdownmodus") {
+            for (let i = 0; i < seCollection.correctAnswerArray.length; i++) {
+                if (seCollection.correctAnswerArray[i].correct) {
+                    userPoints = userPoints + 100;
+                }
+            }
+            userPoints = userPoints + Math.round((seCollection.userTime / (seCollection.wholeTime * 1000)) * 2000);
+        }
+        this.setState({ seCollection, userPoints })
     }
 
-    setBestPlayers = () => {
+    findCardFromUser = () => {
+        const { cardlist } = this.props.cards
+        const { seCollection } = this.state;
+        const {collection} = this.props.collections
+        let cards = []
+        if(this.props.collections.collection.modus !== "Learningmodus"){
+            for (let i = 0; i < seCollection.correctAnswerArray.length; i++) {
+                cards.push(cardlist.find(card => card.id === seCollection.correctAnswerArray[i].cardId))
+            }
+        }
+        else{
+            for (let i = 0; i  < collection.cardIdList.length; i++) {
+                cards.push(cardlist.find(card => card.id === collection.cardIdList[i]))
+            }
+        }
+        this.setState({ cards })
+    }
+
+    async setBestPlayers() {
         const { bestPlayers } = this.props.collections.collection;
         console.log(this.props.collections.collection)
         let bestPlayer = [];
@@ -85,7 +108,7 @@ class GameResults extends Component {
             }
         }
         console.log(bestPlayer)
-        this.setState({ bestPlayer })
+        await this.setState({ bestPlayer })
     }
 
     getUsernameFromId = (id) => {
@@ -94,49 +117,61 @@ class GameResults extends Component {
     }
 
     renderCards() {
-        const { user } = this.props.user
-        if(this.state.seCollection !== null && this.state.cards !== null){
-        return (
-            <div className="card">
-                {this.state.seCollection.correctAnswerArray.map( arr=> {
-                    return (
-                        <div key={arr.cardId}>
-                        {arr.correct ? (
-                            <div className="correctAnswer">
-                                <div>{this.state.cards.find(card => card.id === arr.cardId).question}</div>
-                                <div>userAnswer{arr.userAnswer}CorrectAnswer{arr.correctAnswer}</div>
+        const {collection} = this.props.collections;
+        console.log(collection, this.state.seCollection, this.state.cards)
+        if (this.state.seCollection !== null && this.state.cards !== null && this.props.collections.collection.modus !== "Learningmodus") {
+            return (
+                <div className="card">
+                    {this.state.seCollection.correctAnswerArray.map(arr => {
+                        return (
+                            <div key={arr.cardId}>
+                                {arr.correct ? (
+                                    <div className="correctAnswer">
+                                        <div>{this.state.cards.find(card => card.id === arr.cardId).question}</div>
+                                        <div>userAnswer{arr.userAnswer}CorrectAnswer{arr.correctAnswer}</div>
+                                    </div>
+                                ) : (
+                                        <div className="wrongAnswer">
+                                            <div>{this.state.cards.find(card => card.id === arr.cardId).question}</div>
+                                            <div>userAnswer{arr.userAnswer}CorrectAnswer{arr.correctAnswer}</div>
+                                        </div>
+                                    )}
                             </div>
-                        ):(
-                            <div className="wrongAnswer">
-                                <div>{this.state.cards.find(card => card.id === arr.cardId).question}</div>
-                                <div>userAnswer{arr.userAnswer}CorrectAnswer{arr.correctAnswer}</div>
+                        )
+                    }
+                    )}
+                </div>
+            )
+        }
+        else if (this.state.seCollection !== null && this.state.cards !== null && this.props.collections.collection.modus === "Learningmodus") {
+            console.log("Halla")
+            return (
+                this.state.cards.map(card => {
+                        return(
+                            <div className="ui segment" key={card.id}>
+                                <div>Question:{card.question}</div>
+                                <div>Answer:{card.answer}</div>
                             </div>
-                        )}
-                        </div>
-                    )
-                }
-                )}
-            </div>
-        )}
-        else{return <div></div>}
-    
+                        )
+                    })
+            )
+        }
+
+        else { return( <div></div>) }
     }
 
-    render() {
+    renderBestPlayers() {
         const { collection } = this.props.collections
-        if (collection === null || this.state.bestPlayer === null) {
-            return <div>Loading...</div>
-        }
-        else {
+        const { seCollection } = this.state;
+        if (this.state.bestPlayer !== null && seCollection !== null) {
             return (
                 <div>
-                    <h1>Game Results</h1>
-                    <div>{this.renderCards()}</div>
                     {collection.modus === "Timermodus" ? (
                         <div>
-                            {console.log(this.props.collections.collection, this.state)}
+                            <div>Your Time: {this.msToTime(seCollection.time)}</div>
                             <div>Timeaverage: {this.msToTime(collection.timeAverage)}</div>
-                            <Table data={this.state.bestPlayer} keyField="{collection.id}">
+                            <div>CorrectnessAverage: {collection.correctAnswerAverage}</div>
+                            <Table data={this.state.bestPlayer} keyField="Place">
                                 <Column header="Place" field="place" />
                                 <Column header="Player" field="userId" />
                                 <Column header="Time" field="time" />
@@ -145,13 +180,35 @@ class GameResults extends Component {
                     ) : (<div />)}
                     {collection.modus === "Countdownmodus" ? (
                         <div>
-                            <Table data={this.state.bestPlayer} keyField="g">
+                            <div>Your Points: {this.state.userPoints}</div>
+                            <div>PointAverage:{collection.pointAverage}</div>
+                            <div>CorrectnessAverage: {collection.correctAnswerAverage}</div>
+                            <Table data={this.state.bestPlayer} keyField="Place">
                                 <Column header="Place" field="place" />
                                 <Column header="Player" field="userId" />
                                 <Column header="Points" field="points" />
                             </Table>
                         </div>
                     ) : (<div />)}
+                </div>
+            )
+        }
+        else {
+            return <div></div>
+        }
+    }
+
+    render() {
+        const { collection } = this.props.collections
+        if (collection === null) {
+            return <div>Loading...</div>
+        }
+        else {
+            return (
+                <div>
+                    <h1>Game Results</h1>
+                    <div>{this.renderCards()}</div>
+                    <div>{this.renderBestPlayers()}</div>
                     <button className="ui button" onClick={() => history.push(`/`)}>To List</button>
                 </div>
             )

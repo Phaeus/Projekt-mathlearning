@@ -207,3 +207,11 @@ export const deletePlayedCollection = (collectionId) => async dispatch => {
       payload: collectionId
     })
 }
+
+
+export const setGuestStats = (stats) => async dispatch => {
+    dispatch({
+        type: 'SET_GUEST_STATS',
+        payload:stats
+    })
+}

@@ -13,8 +13,20 @@ const onTimeChange = (props, event) => {
     props.onTimeChange(event.target.value);
 }
 
+
 export default function CollectionConfig(props){
     const [randomChecked, setRandomChecked] = useState(false);
+
+    const displayTimeValidation = () => {
+        let time = props.displayTime.displayTime
+        if(time <= 2){
+          time = 3;
+        }
+        if(time >= 600){
+            time = 3;
+        }
+        return time
+      }
 
     function renderCountdownmodus(){
         if(props.modus === "Countdownmodus" && props.showConfig){
@@ -36,7 +48,7 @@ export default function CollectionConfig(props){
                             <input 
                             type="number"
                             placeholder="Time in seconds"
-                            value={props.displayTime.displayTime}
+                            value={displayTimeValidation()}
                             onChange={e => onTimeChange(props, e)}
                             />
                         </form>

@@ -27,10 +27,6 @@ class Collection extends Component {
       await this.props.getUserlist()
     }
 
-    if(this.props.user.user !== null && this.props.user.loginSuccess){
-      this.setState({showUserStats:true})
-    }
-
     const { id } = this.props.match.params;
     this.setState({ collectionId: id });
     await this.props.getCollection(id);
@@ -93,19 +89,6 @@ class Collection extends Component {
     this.setState({ bestPlayer })
   }
 
-  renderUserStats(){
-    if(this.state.showUserStats){
-      return(
-        <div>
-          
-        </div>
-      )
-    }
-    else{
-      return <div/>
-    }
-  }
-
   renderStartGame() {
     if (this.state.showButton) {
       return (
@@ -136,6 +119,7 @@ class Collection extends Component {
           {collection.modus === "Timermodus" ? (
             <div>
               <div>Timeaverage: {this.msToTime(collection.timeAverage)}</div>
+              <div>CorrectnessAverage: {collection.correctAnswerAverage}</div>
               <Table data={this.state.bestPlayer} keyField="{collection.id}">
                 <Column header="Place" field="place" />
                 <Column header="Player" field="userId" />
@@ -145,6 +129,8 @@ class Collection extends Component {
           ) : (<div />)}
           {collection.modus === "Countdownmodus" ? (
             <div>
+              <div>Pointaverage: {collection.pointAverage}</div>
+               <div>CorrectnessAverage: {collection.correctAnswerAverage}</div>
               <Table data={this.state.bestPlayer} keyField="g">
                 <Column header="Place" field="place" />
                 <Column header="Player" field="userId" />
@@ -167,7 +153,6 @@ class Collection extends Component {
         <div>
           <Header />
           <div className="ui container" id="container">
-            {this.renderUserStats()}
             {this.renderCollectionInfos()}
             {this.renderStartGame()}
             <button className="ui button" onClick={() => { history.push(`/`) }}>Zurück zur Liste</button>

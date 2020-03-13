@@ -25,7 +25,9 @@ class CreateCardForm extends Component {
           showQuestionValidation: false,
           showAnswerValidation: false,
           descripton: "",
-          errors: false
+          errors: false,
+          addButtonDisabled:false,
+          removeDisabled: false
                 }
         this.onDragEnd =  this.onDragEnd.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -178,8 +180,13 @@ class CreateCardForm extends Component {
     }
 
     removeCard = (event, id) => {
-      const newCards = this.state.cards.filter(card => card.id !== id);
+      if(this.state.cards.length >= 3){
+        const newCards = this.state.cards.filter(card => card.id !== id);
       this.setState({cards:newCards, selectedId: null});
+      }
+      else{
+        this.setState({removeDisabled:true})
+      }
     }
 
     onSubmit = (event) => {
@@ -204,10 +211,15 @@ class CreateCardForm extends Component {
     onAddClick = (event) => {
       event.preventDefault();
       let cards = this.state.cards
-      cards.push({question: "", answer: "", showTimebar:false, displayTime:0, id: this.state.lastId+1});
+      if(cards.length <= 39){
+        cards.push({question: "", answer: "", showTimebar:false, displayTime:0, id: this.state.lastId+1});
       this.setState({cards: cards,
       lastId: this.state.lastId+1
       });
+      }
+      else{
+        this.setState({addButtonDisabled:true})
+      }
     }
 
     findIndex = (id) => {
@@ -235,7 +247,7 @@ class CreateCardForm extends Component {
     handleDescriptionChange = (event) => {
       this.setState({description: event.target.value})
     }
-
+    
     renderBars(){
       return(
       <div>
@@ -248,14 +260,22 @@ class CreateCardForm extends Component {
           >
             
               <div>
-              <button className="ui primary negative button"
+                {!this.state.addButtonDisabled ? (
+                  <button className="ui primary negative button"
+                  type="button"
+                  onClick={this.onAddClick}
+                  >
+                    ADD CARD
+                  </button>
+                ):(
+                  <button className="ui primary negative button"
                     type="button"
-                    onClick={this.onAddClick}
+                    disabled
                     >
                       ADD CARD
                     </button>
+                )}
               <div className="flex-container">
-                {console.log(this.state.selectedId)}
                           <CollectionConfig modus={this.props.modus}
                           displayTime={this.state.cards[this.findIndex(this.state.selectedId)]}//dfh
                           showTimebar={this.showRendition()}
@@ -291,6 +311,7 @@ class CreateCardForm extends Component {
                                     placeholder="Question"
                                     onChange={e => {this.handleChange(e, card.id, "question")}}
                                     onFocus={this.handleFocus}
+                                    autoFocus
                                   />
                                   {this.renderQuestionValidation(this.state.cards.find(cardd => cardd.id === card.id).question)}
                                   <div>
@@ -306,13 +327,20 @@ class CreateCardForm extends Component {
                                   </div>
                                 <div>{card.id}</div>
                                 <div>
-                                  <button className="ui primary button" type="button" onClick={e => this.removeCard(e, card.id)}>
+                                  {!this.state.removeDisabled ? (
+                                    <button className="ui primary button" type="button" onClick={e => {e.stopPropagation();this.removeCard(e, card.id)}}>
+                                    <i className="delete icon"></i>
+                                    </button>
+                                  ):(
+                                    <button className="ui primary button" type="button" disabled>
                                   <i className="delete icon"></i>
                                   </button>
+                                  )}
+                                  
                                 </div>               
                                 </div>
                                 ):(
-                                <div className="clear-segment" onClick={() => this.setState({showFields:true, showConfig:true, selectedId: card.id})}>
+                                <div className="clear-segment" onClick={e => {this.setState({showFields:true, showConfig:true, selectedId: card.id})}}>
                                   {cardVali(this.state.cards.find(equa => equa.id === card.id).question, this.state.cards.find(equa => equa.id === card.id).answer) === null ?
                                   (
                                     <MathJax math={"`"+this.state.cards.find(equa => equa.id === card.id).question+"`"} />  

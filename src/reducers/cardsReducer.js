@@ -1,9 +1,9 @@
 
 const initialState = {
     cardlist: [
-    {question: "1", answer: "1", id: 1, displayTime: 3, showTimebar: true},
-    {question: "2", answer: "2", id: 2, displayTime: 3, showTimebar: true},
-    {question: "3", answer: "3", id: 3, displayTime: 3 , showTimebar: true},
+    {question: "1", answer: "1", id: 1, displayTime: 10, showTimebar: true},
+    {question: "2", answer: "2", id: 2, displayTime: 20, showTimebar: true},
+    {question: "3", answer: "3", id: 3, displayTime: 30 , showTimebar: true},
     {question: "1+1", answer: "2", displayTime: 0, id: 4, showTimebar: false},
     {question: "2+2", answer: "4", displayTime: 0, id: 5, showTimebar: false},
     {question: "4+4", answer: "8", displayTime: 0, id: 6, showTimebar: false},

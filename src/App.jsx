@@ -11,6 +11,7 @@ import Signin from './components/User/Signin';
 import GameResults from './components/Collection/GameResults';
 import EditCollection from './components/Collection/EditCollection';
 
+//<Route path="/collections/:id/:username" exact component={UserstatsAccordion} />
 function App() {
   return (
     <Router history={history}>
