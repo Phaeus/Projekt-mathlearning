@@ -13,9 +13,7 @@ class Collectionlist extends Component {
     if (this.props.collections.collectionlist === null) {
       await this.props.getCollections();
     }
-    if(this.props.user.loginSuccess === null){
       await this.props.getLoginSuccess();
-    }
     if(this.props.user.getUserlist === null){
       await this.props.getUserlist();
     }

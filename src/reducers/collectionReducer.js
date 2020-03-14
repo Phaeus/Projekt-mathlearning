@@ -167,7 +167,7 @@ export default (state = initialState, action) => {
         else {
           correctAnswerAverage = Math.round(((newCorrectAverage + correctAnswerAverage) / 2) * 100) / 100;
         }
-        if(stats.userId > 0){
+        if(stats.userId >= 0){
         let bestPlayers = statCollection.bestPlayers;
         let newBestPlayers = []
 
@@ -223,7 +223,7 @@ export default (state = initialState, action) => {
           pointAverage = Math.round(((points + statCollection.pointAverage) / 2) * 100) / 100;
         }
 
-        if(stats.user > 0){
+        if(stats.userId >= 0){
         let bestPlayers = statCollection.bestPlayers;
         let newBestPlayers = []
         let setted = false;
@@ -244,6 +244,7 @@ export default (state = initialState, action) => {
         }
         newBestPlayers.pop()
         statCollection = { ...statCollection, correctAnswerAverage, bestPlayers: newBestPlayers, pointAverage}
+        console.log(newBestPlayers)
       }
       else{
         statCollection = { ...statCollection, correctAnswerAverage, pointAverage}

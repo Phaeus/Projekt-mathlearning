@@ -7,8 +7,17 @@ import thunk from "redux-thunk";
 import App from "./App";
 import reducers from "./reducers";
 
+const persistedState = localStorage.getItem('reduxState') 
+                       ? JSON.parse(localStorage.getItem('reduxState'))
+: {}
+
+
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)));
+const store = createStore(reducers, persistedState, composeEnhancers(applyMiddleware(thunk)));
+
+store.subscribe(()=>{
+    localStorage.setItem('reduxState', JSON.stringify(store.getState()))
+})
 
 ReactDOM.render(
     <Provider store={store}>

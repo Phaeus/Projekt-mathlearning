@@ -36,7 +36,9 @@ class GameResults extends Component {
             this.setBestPlayers()
         }
             await this.findUserPlayedCollection();
-            this.findCardFromUser()
+            if(this.state.seCollection !== null){
+                this.findCardFromUser()
+            }
     }
 
     msToTime = (ms) => {

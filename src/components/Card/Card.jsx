@@ -46,12 +46,11 @@ class Card extends Component {
     }
   }
 
-  async componentWillUnmount() {
+  componentWillUnmount() {
     if (this.props.modus === "Timermodus") {
       clearInterval(this.timer);
     }
     else if (this.props.modus === "Countdownmodus") {
-      //this.stopCountdown()
       clearInterval(this.timer);
     }
 
@@ -59,14 +58,17 @@ class Card extends Component {
         let correctedAnswers = this.setCorrectAnswers();
         correctedAnswers = { ...correctedAnswers, collectionId: Number(this.props.id) }
         if(this.props.user.loginSuccess){
+          console.log("hee")
           this.props.addPlayedCollection(correctedAnswers);
           correctedAnswers = { ...correctedAnswers, userId: this.props.user.user.id, modus: this.props.modus }
-          await this.props.setCollectionStats(correctedAnswers);
+          console.log("hahahhahaha")
+          this.props.setCollectionStats(correctedAnswers);
+          console.log("Halla")
         }
         else{
           this.props.setGuestStats(correctedAnswers);
           correctedAnswers = { ...correctedAnswers, userId: -1, modus: this.props.modus }
-          await this.props.setCollectionStats(correctedAnswers);
+          this.props.setCollectionStats(correctedAnswers);
         }
       }
       else if (this.props.modus === "Countdownmodus") {
@@ -75,12 +77,12 @@ class Card extends Component {
         if(this.props.user.loginSuccess){
           this.props.addPlayedCollection(correctedAnswers);
           correctedAnswers = { ...correctedAnswers, userId: this.props.user.user.id, modus: this.props.modus }
-          await this.props.setCollectionStats(correctedAnswers);
+          this.props.setCollectionStats(correctedAnswers);
         }
         else{
           this.props.setGuestStats(correctedAnswers);
           correctedAnswers = { ...correctedAnswers, userId: -1, modus: this.props.modus }
-          await this.props.setCollectionStats(correctedAnswers);
+          this.props.setCollectionStats(correctedAnswers);
         }
       }
       else {
@@ -96,9 +98,6 @@ class Card extends Component {
   }
 
   startCountdown = () => {
-    console.log(this.state.currentIndex)
-    console.log(this.state.cards)
-    console.log(this.state.cards[this.state.currentIndex].displayTime)
     this.setState({
       countdownOn: true,
       countTime: this.state.cards[this.state.currentIndex].displayTime * 1000,
