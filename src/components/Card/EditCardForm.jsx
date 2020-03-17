@@ -127,7 +127,7 @@ class CreateCardForm extends Component {
           index = i;
         }
         
-      } //probleme mit id weil id !== index --> Dokumentation
+      }
       newCardlist.splice(index, 1, newCard);
       this.setState({cards: newCardlist, selectedEquation: math});
       this.props.setSelectedEquation(math);
