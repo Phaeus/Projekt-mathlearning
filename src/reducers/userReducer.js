@@ -1,7 +1,7 @@
 const initialState = {
     userlist: [
         {
-            username: "h", password: "h", createdCollection: [1, 2, 3],
+            username: "Phaeus", password: "hallo", createdCollection: [1, 2, 3],
             playedCollection: [
                 {
                     correctAnswerArray: [

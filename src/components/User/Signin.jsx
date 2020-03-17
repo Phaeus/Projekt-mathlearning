@@ -11,7 +11,8 @@ class Signin extends Component{
     constructor(props){
         super(props);
         this.state = {
-            errors:null
+            errors:null,
+            potError:null
         }
     }  
 
@@ -57,7 +58,7 @@ class Signin extends Component{
                         history.goBack();
                     }
                     else{
-                        //not typed in correctly
+                        this.setState({potError:"Error: Choose another Username"})
                     }
                 }}
             >
@@ -102,6 +103,7 @@ class Signin extends Component{
                     ):null}
                     </div>
                     <div>
+                        {this.state.potError !== null ? (<div>{this.state.potError}</div>):(<div></div>)}
                     <button className="ui button" type="submit">Sign in</button>
                     </div>
                 </Form>

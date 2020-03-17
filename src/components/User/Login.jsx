@@ -11,7 +11,9 @@ import Header from '../Header';
 class Login extends Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            potError:null
+        }
     }
 
     checkUser(values) {
@@ -44,7 +46,7 @@ class Login extends Component {
                             history.goBack();
                         }
                         else {
-                            return (<div>He</div>)
+                            this.setState({potError:"Error: Wrong Username or Password"})
                         }
                     }}
                 >
@@ -83,6 +85,7 @@ class Login extends Component {
                                 </div>
                                 <div>
                                     <div>
+                                        <div>{this.state.potError !== null ? (<div>{this.state.potError}</div>):(null)}</div>
                                         <button className="ui button" type="submit">Log in</button>
                                     </div>
                                 </div>
