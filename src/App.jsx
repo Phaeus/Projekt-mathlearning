@@ -11,12 +11,14 @@ import Signin from './components/User/Signin';
 import GameResults from './components/Collection/GameResults';
 import EditCollection from './components/Collection/EditCollection';
 import ClearStorage from './ClearStorage'
+import Help from './components/Help'
 
 function App() {
   return (
     <Router history={history}>
       <Switch>
         <Route path="/clear" exact component={ClearStorage} />
+        <Route path="/help" exact component={Help} />
         <Route path="/" exact component={MainPage} />
         <Route path="/collections/:id" exact component={Collection} />
         <Route path="/createCollection" exact component={CreateCollection} />

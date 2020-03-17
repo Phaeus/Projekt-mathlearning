@@ -1,15 +1,15 @@
 
 const initialState = {
     cardlist: [
-    {question: "1", answer: "1", id: 1, displayTime: 10, showTimebar: true},
-    {question: "2", answer: "2", id: 2, displayTime: 20, showTimebar: true},
-    {question: "3", answer: "3", id: 3, displayTime: 30 , showTimebar: true},
+    {question: "1+1", answer: "2", id: 1, displayTime: 10, showTimebar: true},
+    {question: "8/4", answer: "2", id: 2, displayTime: 20, showTimebar: true},
+    {question: "3*3", answer: "9", id: 3, displayTime: 30 , showTimebar: true},
     {question: "1+1", answer: "2", displayTime: 0, id: 4, showTimebar: false},
     {question: "2+2", answer: "4", displayTime: 0, id: 5, showTimebar: false},
     {question: "4+4", answer: "8", displayTime: 0, id: 6, showTimebar: false},
-    {question: "2", answer: "2", displayTime: 0, id: 7, showTimebar: false},
-    {question: "3", answer: "3", displayTime: 0, id: 8, showTimebar: false},
-    {question: "4", answer: "4", displayTime: 0, id: 9, showTimebar: false}
+    {question: "5*6", answer: "30", displayTime: 0, id: 7, showTimebar: false},
+    {question: "7*8", answer: "56", displayTime: 0, id: 8, showTimebar: false},
+    {question: "4*1", answer: "4", displayTime: 0, id: 9, showTimebar: false}
   ],
     card: null,
     lastId:9,

@@ -20,7 +20,7 @@ class Header extends Component {
                        <h1 className="link item">Mathlearning</h1>
                     </div>
                     <div className="right menu">
-                    <div className="ui simple right floating link icon item">
+                    <div className="ui simple right floating link icon item" onClick={() => history.push(`/help`)}>
                             <i className="large question icon"></i>
                         </div>
                             {

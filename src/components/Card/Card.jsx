@@ -232,6 +232,16 @@ class Card extends Component {
     return new Date(ms).toISOString().slice(11, -1);
   }
 
+  componentDidUpdate(){
+    const {cardCounter, cards} = this.state;
+    if (cardCounter === cards.length && this.props.modus !== "Timermodus") {
+        history.push(`/collection/${this.props.id}/GameResults`);
+    }
+    else if (cardCounter === cards.length && this.state.timerOn) {
+      history.push(`/collection/${this.props.id}/GameResults`);
+    }
+  }
+
   setCorrectAnswers = () => {
     const { answers, cards } = this.state;
     let correctAnswerArray = [];
@@ -290,14 +300,6 @@ class Card extends Component {
 
     if (cards === null) {
       return <div>Loading...</div>;
-    }
-    else if (cardCounter === cards.length && this.state.timerOn) {
-      history.push(`/collection/${this.props.id}/GameResults`);
-      return <div></div>
-    }
-    else if (cardCounter === cards.length && this.props.modus !== "Timermodus") {
-      history.push(`/collection/${this.props.id}/GameResults`);
-      return <div></div>
     }
     else {
       return (

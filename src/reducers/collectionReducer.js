@@ -1,6 +1,6 @@
 const initialState = {
   collectionlist: [{
-    title: "Halla",
+    title: "Beispiel-Countdownmodus",
     randomOrderBool: true,
     cardIdList: [1, 2, 3],
     creatorId: 0,
@@ -14,7 +14,7 @@ const initialState = {
     id: 1
   },
   {
-    title: "Timermodus",
+    title: "Beispiel-Timermodus",
     randomOrderBool: false,
     cardIdList: [4, 5, 6],
     creatorId: 0,
@@ -28,7 +28,7 @@ const initialState = {
     id: 2
   },
   {
-    title: 'Learningmodus',
+    title: 'Beispeil-Learningmodus',
     randomOrderBool: true,
     cardIdList: [
       7,
