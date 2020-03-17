@@ -20,10 +20,8 @@ const initialState = {
   export default (state = initialState, action) => {
     switch (action.type) {
       case 'GET_CARDS':
-        console.log(state);
         return {...state, cardlist: action.payload};
       case 'GET_CARD':
-        console.log(state);
         const id = parseInt(action.payload);
         const card = state.cardlist.find(t => t.id === id);
         return { ...state, card: card};
@@ -38,7 +36,6 @@ const initialState = {
           nId = nId+1;
           nList.push(card);
         }
-        console.log(nId);
           return { ...state, cardlist:nList, lastId: nId}
       
       case 'UPDATE_CARD':
@@ -63,7 +60,6 @@ const initialState = {
         for (let i = 0; i < potDelIds.length; i++) {
           oldCardlist = oldCardlist.filter(card => card.id !== potDelIds[i])
         }
-        console.log(oldCardlist)
       return {...state, cardlist: oldCardlist, lastId}
       
       case 'CARD_IDS_TO_VALUE':
@@ -73,7 +69,6 @@ const initialState = {
           for (let i = 0; i < cardIds.length; i++) {
             newCardArray.push(cards.find(card => card.id === cardIds[i]));
           }
-          console.log(newCardArray)
       return {...state, idsToValueArray:newCardArray}
 
       case 'SET_IDS_TO_VALUE_ARRAY':
@@ -89,7 +84,6 @@ const initialState = {
         for (let i = 0; i < deleteCardIds.length; i++) {
           deletedCardList = deletedCardList.filter(card => card.id !== deleteCardIds[i]);
         }
-        console.log(deletedCardList)
       return {...state, cardlist:deletedCardList}
 
       default:

@@ -76,7 +76,6 @@ export default (state = initialState, action) => {
             if (searchedUsername !== null) {
                 user = state.userlist.find(user => user.username === searchedUsername);
             }
-            console.log(user)
             return { ...state, user }
 
         case "CREATE_USER":
@@ -86,7 +85,6 @@ export default (state = initialState, action) => {
                     idNew = (state.userlist[i].id);
                 }
             }
-            console.log(action.payload)
             const newUser = { ...action.payload, createdCollection: [], playedCollection: [], id: idNew + 1 };
             let newList = state.userlist;
             newList.push(newUser);
@@ -95,11 +93,8 @@ export default (state = initialState, action) => {
         case "CHECK_USER":
             const username = action.payload.username;
             const password = action.payload.password;
-            console.log(state.userlist);
             for (let i = 0; i < state.userlist.length; i++) {
                 if (username === state.userlist[i].username && password === state.userlist[i].password) {
-                    console.log(username, state.userlist[i])
-                    console.log(password)
                     return { ...state, loginSuccess: true }
                 }
             }
@@ -108,7 +103,6 @@ export default (state = initialState, action) => {
         case "LOGIN_USER":
             const loggedInUsername = action.payload;
             const loggedInUser = state.userlist.find(user => user.username === loggedInUsername);
-            console.log(loggedInUser);
             return { ...state, user: loggedInUser, loginSuccess: true };
 
         case "GET_LOGIN_SUCCESS":
@@ -127,12 +121,9 @@ export default (state = initialState, action) => {
             return { ...state, usernameAvailable: true, loginSuccess: true }
         
         case 'SET_GUEST_STATS':
-            console.log(action.payload)
             return {...state, guest:action.payload}
 
         case "ADD_PLAYED_COLLECTION":
-            console.log(action.payload)
-            console.log(state)
             let playedCollection = state.user.playedCollection;
             let nUser = state.userlist.find(user => user.id === state.user.id);
             playedCollection.push(action.payload);
@@ -143,8 +134,6 @@ export default (state = initialState, action) => {
                     userlistNew[i] = nUser;
                 }
             }
-            console.log(userlistNew)
-            console.log("halla")
             return { ...state, userlist: userlistNew }
 
         case "ADD_CREATED_COLLECTION":
@@ -158,7 +147,6 @@ export default (state = initialState, action) => {
                     newUserlist[i] = neUser;
                 }
             }
-            console.log(newUserlist)
             return { ...state, userlist: newUserlist }
 
         case 'DELETE_CREATED_COLLECTION':
@@ -172,7 +160,6 @@ export default (state = initialState, action) => {
                     }
                 }
             }
-            console.log(delUserList)
             return { ...state, userlist: delUserList }
         case 'DELETE_PLAYED_COLLECTION':
             let deCollId = action.payload;
@@ -186,6 +173,9 @@ export default (state = initialState, action) => {
                 }
             }
             return { ...state, userlist: deUserList }
+
+        case 'SET_GUEST_TO_NULL':
+            return {...state, guest:null}    
         default:
             return state;
     }

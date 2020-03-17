@@ -10,12 +10,13 @@ import User from './components/User/User';
 import Signin from './components/User/Signin';
 import GameResults from './components/Collection/GameResults';
 import EditCollection from './components/Collection/EditCollection';
+import ClearStorage from './ClearStorage'
 
-//<Route path="/collections/:id/:username" exact component={UserstatsAccordion} />
 function App() {
   return (
     <Router history={history}>
       <Switch>
+        <Route path="/clear" exact component={ClearStorage} />
         <Route path="/" exact component={MainPage} />
         <Route path="/collections/:id" exact component={Collection} />
         <Route path="/createCollection" exact component={CreateCollection} />

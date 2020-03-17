@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 
 import history from '../history';
 import './Header.css';
+import {logoutUser} from '../actions'
 
 class Header extends Component {
     constructor(props){
@@ -14,18 +15,26 @@ class Header extends Component {
 
     render(){
         return(
-                <div className="ui secondary pointing menu">
+                <div className="ui top attached menu" id="menu-bar">
                     <div className="left menu" style={{cursor: "pointer"}} onClick={() => {history.push(`/`)}}>
-                       <h1 className="item">Mathlearning</h1>
+                       <h1 className="link item">Mathlearning</h1>
                     </div>
                     <div className="right menu">
+                    <div className="ui simple right floating link icon item">
+                            <i className="large question icon"></i>
+                        </div>
                             {
-                            this.props.user.loginSuccess ? (
-                                <div className="item">
-                                    <button className="ui basic button" onClick={() => history.push(`/user/${this.props.user.user.username}`)}>
-                                        <i className="icon user"></i>
+                            this.props.user.loginSuccess && this.props.user.user !== null? (
+                                <div role="listbox" className=" ui item simple dropdown" onClick={() => history.push(`/user/${this.props.user.user.username}`)}>
+                                    <div>
+                                        <i className="user icon"></i>
                                         {this.props.user.user.username}
-                                        </button>
+                                        </div>
+                                        <div className="menu transition">
+                                        <div className="item" onClick={() => {this.props.logoutUser()}}>
+                                            Log out
+                                        </div>
+                                        </div>
                                 </div>
                             ):(
                                 <div className="item">
@@ -50,7 +59,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = {
-    
+    logoutUser
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header)

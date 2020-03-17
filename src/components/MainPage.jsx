@@ -13,9 +13,9 @@ export default class MainPage extends Component{
         return(
         <div>
             <Header />
-            <div className="ui container">
-                <div className="ui segment">
-                    <h1 className="ui header">Mathlearning: Challenge your mind!</h1>
+            <div className="ui container" >
+            <h1 className="ui header" style={{textAlign:"center"}}>Challenge your mind!</h1>
+                <div className="ui segment" style={{borderColor:"grey", borderWidth:"3px"}}>
                     <Collectionlist />
                 </div>
             </div>

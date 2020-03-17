@@ -27,7 +27,8 @@ class Card extends Component {
       countStart: 0,
       countTime: 0,
       userTime:0,
-      currentIndex:0
+      currentIndex:0,
+      showAnswer:false
     }
     this.countdown = null;
     this.saveAnswer = this.saveAnswer.bind(this);
@@ -42,7 +43,6 @@ class Card extends Component {
     }
     if (this.props.modus === "Countdownmodus" && this.state.cards !== null && this.state.cards[this.state.currentIndex].showTimebar) {
       this.startCountdown();
-      //this.setState({currentIndex:1, cardCounter: 1})
     }
   }
 
@@ -53,17 +53,14 @@ class Card extends Component {
     else if (this.props.modus === "Countdownmodus") {
       clearInterval(this.timer);
     }
-
+    if(this.state.cards.length <= this.state.cardCounter){
       if (this.props.modus === "Timermodus") {
         let correctedAnswers = this.setCorrectAnswers();
         correctedAnswers = { ...correctedAnswers, collectionId: Number(this.props.id) }
         if(this.props.user.loginSuccess){
-          console.log("hee")
           this.props.addPlayedCollection(correctedAnswers);
           correctedAnswers = { ...correctedAnswers, userId: this.props.user.user.id, modus: this.props.modus }
-          console.log("hahahhahaha")
           this.props.setCollectionStats(correctedAnswers);
-          console.log("Halla")
         }
         else{
           this.props.setGuestStats(correctedAnswers);
@@ -95,6 +92,7 @@ class Card extends Component {
           this.props.setCollectionStats({collectionId: Number(this.props.id), userId:-1})
         }
       }
+    }
   }
 
   startCountdown = () => {
@@ -158,17 +156,46 @@ class Card extends Component {
 
   renderCard() {
     const { cards, currentIndex, cardCounter} = this.state;
-    if (cardCounter < cards.length) {
+    if (cardCounter < cards.length && this.props.modus !== "Learningmodus") {
       return (
         <div>
           <div className="ui segment">
-            <div className="card">
-              <Mathjax math={"`" + cards[currentIndex].question + "`"} />
+            <div className="card" style={{textAlign:"center"}}>
+              <div style={{textAlign:"center", fontSize:"30px"}}>
+              <Mathjax math={"`" + cards[currentIndex].question + "`"}/>
+              </div>
             </div>
 
           </div>
-          <AnswerInput saveAnswer={this.saveAnswer} handleAnswerChange={this.handleAnswerChange} />
+          <div style={{textAlign:"center"}}>
+            <AnswerInput saveAnswer={this.saveAnswer} handleAnswerChange={this.handleAnswerChange} />
+          </div>
         </div>
+      )
+    }
+    else if(cardCounter < cards.length && this.props.modus === "Learningmodus"){
+      return(
+        <div style={{display:"flex"}}>
+          <div className="ui segment" style={{width:"400px"}}>
+            <div className="card" >
+              <div style={{textAlign:"center", fontSize:"30px"}}>
+              <Mathjax math={"`" + cards[currentIndex].question + "`"}/>
+              </div>
+            </div>
+          </div>
+          <div className="ui segment" style={{width:"400px", marginLeft:"20px"}} onClick={() => this.setState({showAnswer:true})}>
+             {this.state.showAnswer?(
+               <div>
+                 <div className="card" >
+                <div style={{textAlign:"center", fontSize:"30px"}}>
+                <Mathjax math={"`" + cards[currentIndex].answer + "`"}/>
+                {cards[currentIndex].answer}
+                </div>
+                </div>
+               </div>
+             ):(<div>Click to show Answer</div>)}
+          </div>
+          </div>
       )
     }
   }
@@ -241,7 +268,7 @@ class Card extends Component {
         return <div></div>
       }
       else if (this.props.modus === "Timermodus") {
-        return <div>{this.msToTime(this.state.timerTime)}</div>
+        return <h1 style={{textAlign:"center"}}>{this.msToTime(this.state.timerTime)}</h1>
       }
       else {
         return (
@@ -278,7 +305,7 @@ class Card extends Component {
           <div>
             {this.renderBar()}
             {this.renderCard()}
-            <button className="ui negative button" onClick={() => { this.saveAnswer() }}>NEXT</button>
+            <button className="ui negative button" style={{textAlign:"center"}} onClick={() => { this.saveAnswer(); this.setState({showAnswer:false}) }}>NEXT</button>
           </div>
         </div>
       );

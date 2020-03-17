@@ -30,22 +30,26 @@ class User extends Component{
         const { username } = this.props.match.params;
         this.setState({username});
         await this.props.getUser(username);
-        console.log(this.props.user.loginSuccess)
 
 
         if(this.props.user.loginSuccess){
             this.setState({loginSuccess: this.props.user.loginSuccess})
             this.getCollections(this.props.user.user.createdCollection, "created");
-            console.log(this.props.user.user.playedCollection)
             this.getCollections(this.props.user.user.playedCollection, "played");
             this.setState({user:this.props.user.user})
         }
         else{
+            history.push(`/`)
             this.setState({createdCollection: undefined})
             this.setState({playedCollection: undefined})
             this.setState({user: undefined})
         }
-        console.log(this.props.user)
+      }
+
+      componentDidUpdate(){
+          if(!this.props.user.loginSuccess){
+              history.push(`/`)
+          }
       }
 
       getCollections = (collections, whichCollection) => {
@@ -77,7 +81,7 @@ class User extends Component{
         await this.props.deleteCreatedCollection(collectionId);
         await this.props.deletePlayedCollection(collectionId);
         await this.props.deleteCards(cardIds);
-        this.setState({createdCollection: this.props.collections.collectionlist})
+        this.setState({createdCollection: this.props.user.user.createdCollection.filter(coll => coll === collectionId)})
       }
 
       handleEditOnClick = (event, collectionId) => {
@@ -86,22 +90,35 @@ class User extends Component{
     }
     
 
-    handleStatsOnClick = (event, collectionId) => {
-        event.stopPropagation();
-        history.push(`/collections/${collectionId}/${this.state.username}`)
-    }
  
     renderCreatedCollection(){
-        console.log("Hee")
-        if(this.state.createdCollection !== null){
+        if(this.state.createdCollection.length === 0){
+            return(
+                <div>
+                    No Collection created yet
+                </div>
+            )
+        }
+        else if(this.state.createdCollection !== null){
             return(
                 <div>
                 {this.state.createdCollection.map(collection => {
                     return(
-                        <div className="ui segment" id="collection" key={collection.id} onClick={() => {history.push(`/collections/${collection.id}`)}}>
-                            {collection.title} Anzahl Karten:{collection.cardIdList.length} Creator:{this.findCreator(collection.creatorId)} Modus:{collection.modus}
-                            <i className="edit icon" id="edit" onClick={e => this.handleEditOnClick(e, collection.id)}></i>
-                            <i className="trash alternate icon" id="delete" onClick={e => this.handleDeleteOnClick(e, collection.id, collection.cardIdList)}></i>
+                        <div className="ui segment" key={collection.id} onClick={() => {history.push(`/collections/${collection.id}`)}}>
+                             <div  className="userCollection">
+                            <div className="item">
+                            {collection.title}
+                            </div> 
+                            <div className="item">
+                            Anzahl Karten:{collection.cardIdList.length}
+                            </div>
+                            <div className="item">Creator:{this.findCreator(collection.creatorId)}</div> 
+                            <div className="item">Modus:{collection.modus}</div>
+                            <div className="edit-delete">
+                                <i className="edit icon" id="edit" onClick={e => this.handleEditOnClick(e, collection.id)}></i>
+                                <i className="trash alternate icon" id="delete" onClick={e => this.handleDeleteOnClick(e, collection.id, collection.cardIdList)}></i>
+                                </div>
+                        </div>
                         </div>
                     )
                 })} </div>
@@ -113,15 +130,27 @@ class User extends Component{
     }
 
     renderPlayedCollection(){
-        if(this.state.playedCollectionCollection !== null){
+        if(this.state.playedCollection.length === 0){
+            return(
+                <div>No Collection played yet!</div>
+            )
+        }
+        else if(this.state.playedCollectionCollection !== null){
             return(
                 <div>
-                    {console.log(this.state.playedCollection)}
                 {this.state.playedCollection.map(collection => {
                     return(
-                        <div className="ui segment" id="collection" key={collection.collectionId} onClick={() => {history.push(`/collections/${collection.id}`)}}>
-                            {collection.title} Anzahl Karten:{collection.cardIdList.length} Creator:{this.findCreator(collection.creatorId)} Modus:{collection.modus}
-                            <i className="chart bar icon" id="stats" onClick={e => this.handleStatsOnClick(e, collection.id)}></i>
+                        <div className="ui segment" key={collection.collectionId} onClick={() => {history.push(`/collections/${collection.id}`)}}>
+                            <div  className="userCollection">
+                            <div className="item">
+                            {collection.title}
+                            </div> 
+                            <div className="item">
+                            Anzahl Karten:{collection.cardIdList.length}
+                            </div>
+                            <div className="item">Creator:{this.findCreator(collection.creatorId)}</div> 
+                            <div className="item">Modus:{collection.modus}</div>
+                            </div>
                         </div>
                     )
                 })} </div>
@@ -136,20 +165,17 @@ class User extends Component{
         if(this.state.user === null){
             return <div>Loading...</div>
         }
-        else if (!this.state.loginSuccess) {
-           history.push(`/`);
-           return(<div></div>)
-        }
         else{
         return(
             <div>
                 <Header />
                 <div className="ui container">
-                    createdCollection:
+                <div className="ui secondary header" style={{marginTop:"20px"}}>Created Collections:</div>
                     {this.renderCreatedCollection()}
-                    playedCollection:
+                    <div className="ui secondary header" style={{marginTop:"20px"}}>Played Collections:</div>
                     {this.renderPlayedCollection()}
-                    <button className="ui button" onClick={() => {this.props.logoutUser(); history.goBack()}}>Logout</button>
+                    <button className="ui button" style={{marginTop:"20px"}} onClick={() => {this.props.logoutUser(); history.goBack()}}>Logout</button>
+                    <button className="ui button" style={{marginTop:"20px"}} onClick={() => {history.push(`/`)}}>Back to Mainmenu</button>
                 </div>
             </div>
         )

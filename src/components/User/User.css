@@ -1,15 +1,18 @@
-#collection{
-    cursor: cell
+.userCollection{
+    cursor: cell;
+    display: flex;
+    flex-direction: row;
 }
 
 #edit{
-    cursor: pointer
+    cursor: pointer;
+    text-align: right;
 }
-
-#delete{
-    cursor: pointer
+.item{
+    margin-right: 40px; 
+    text-align: right;
 }
-
-#stats{
-    cursor:pointer
+.edit-delete{
+   align-items: right;
+   cursor:pointer;
 }

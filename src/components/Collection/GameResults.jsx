@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import { Table, Column } from 'react-rainbow-components'
 
 import history from '../../history';
-import { getCollection, getCollections, getUser, getCards } from '../../actions';
+import { getCollection, getCollections, getUser, getCards, setGuestToNull} from '../../actions';
 import './GameResults.css'
+import Header from '../Header';
 
 class GameResults extends Component {
     constructor(props) {
@@ -41,6 +42,10 @@ class GameResults extends Component {
             }
     }
 
+    componentWillUnmount(){
+        this.props.setGuestToNull();
+    }
+
     msToTime = (ms) => {
         return new Date(ms).toISOString().slice(11, -1);
     }
@@ -50,22 +55,26 @@ class GameResults extends Component {
         let { collection } = this.props.collections
         let userPoints = 0;
         let seCollection = null
-        if (user !== null && this.props.user.guest === null) {
+        if (user !== null && this.props.user.guest === null){
             user.playedCollection.reverse();
             userPoints = 0;
             seCollection = user.playedCollection.find(arr => arr.collectionId === collection.id)
+            
         }
         else{
             seCollection = this.props.user.guest;
         }
         if (this.props.collections.collection.modus === "Countdownmodus") {
-            for (let i = 0; i < seCollection.correctAnswerArray.length; i++) {
-                if (seCollection.correctAnswerArray[i].correct) {
-                    userPoints = userPoints + 100;
+                for (let i = 0; i < seCollection.correctAnswerArray.length; i++) {
+                    if (seCollection.correctAnswerArray[i].correct) {
+                        userPoints = userPoints + 100;
+                    }
+                }
+                if(seCollection.wholeTime > 0){
+                    userPoints = userPoints + Math.round((seCollection.userTime / (seCollection.wholeTime * 1000)) * 2000);
                 }
             }
-            userPoints = userPoints + Math.round((seCollection.userTime / (seCollection.wholeTime * 1000)) * 2000);
-        }
+        
         this.setState({ seCollection, userPoints })
     }
 
@@ -89,7 +98,6 @@ class GameResults extends Component {
 
     async setBestPlayers() {
         const { bestPlayers } = this.props.collections.collection;
-        console.log(this.props.collections.collection)
         let bestPlayer = [];
         for (let i = 0; i < bestPlayers.length; i++) {
             if (bestPlayers[i].userId === null) {
@@ -109,33 +117,29 @@ class GameResults extends Component {
                 }
             }
         }
-        console.log(bestPlayer)
         await this.setState({ bestPlayer })
     }
 
     getUsernameFromId = (id) => {
-        console.log(this.props.user)
         return this.props.user.userlist.find(user => user.id === id).username;
     }
 
     renderCards() {
-        const {collection} = this.props.collections;
-        console.log(collection, this.state.seCollection, this.state.cards)
         if (this.state.seCollection !== null && this.state.cards !== null && this.props.collections.collection.modus !== "Learningmodus") {
             return (
-                <div className="card">
+                <div style={{display:"flex"}}>
                     {this.state.seCollection.correctAnswerArray.map(arr => {
                         return (
                             <div key={arr.cardId}>
                                 {arr.correct ? (
-                                    <div className="correctAnswer">
-                                        <div>{this.state.cards.find(card => card.id === arr.cardId).question}</div>
-                                        <div>userAnswer{arr.userAnswer}CorrectAnswer{arr.correctAnswer}</div>
+                                    <div className="ui segment" style={{height:"100px", width:"auto", marginBottom:"20px", marginRight:"10px", backgroundColor:"green"}}>
+                                        <div>Question:  {this.state.cards.find(card => card.id === arr.cardId).question}</div>
+                                        <div>User's answer: {arr.userAnswer}</div><div>Correct answer: {arr.correctAnswer}</div>
                                     </div>
                                 ) : (
-                                        <div className="wrongAnswer">
+                                        <div className="ui segment" style={{height:"100px", width:"auto", marginBottom:"20px", marginRight:"10px", backgroundColor:"red"}}>
                                             <div>{this.state.cards.find(card => card.id === arr.cardId).question}</div>
-                                            <div>userAnswer{arr.userAnswer}CorrectAnswer{arr.correctAnswer}</div>
+                                            <div>userAnswer{arr.userAnswer}</div><div>CorrectAnswer{arr.correctAnswer}</div>
                                         </div>
                                     )}
                             </div>
@@ -146,16 +150,22 @@ class GameResults extends Component {
             )
         }
         else if (this.state.seCollection !== null && this.state.cards !== null && this.props.collections.collection.modus === "Learningmodus") {
-            console.log("Halla")
             return (
-                this.state.cards.map(card => {
+                <div>
+                    <div>You played the Learningmodus. You can see the questions and the right answers.</div>
+                    <div style={{display:"flex", flexDirection:"row", marginTop:"20px"}} >
+                {this.state.cards.map(card => {
                         return(
-                            <div className="ui segment" key={card.id}>
+                            <div>
+                            <div className="ui segment" key={card.id} style={{marginRight:"10px", height:"100px", width:"100px"}}>
                                 <div>Question:{card.question}</div>
                                 <div>Answer:{card.answer}</div>
                             </div>
+                            </div>
                         )
-                    })
+                    })}
+                    </div>
+                    </div>
             )
         }
 
@@ -173,7 +183,7 @@ class GameResults extends Component {
                             <div>Your Time: {this.msToTime(seCollection.time)}</div>
                             <div>Timeaverage: {this.msToTime(collection.timeAverage)}</div>
                             <div>CorrectnessAverage: {collection.correctAnswerAverage}</div>
-                            <Table data={this.state.bestPlayer} keyField="Place">
+                            <Table data={this.state.bestPlayer} keyField="place">
                                 <Column header="Place" field="place" />
                                 <Column header="Player" field="userId" />
                                 <Column header="Time" field="time" />
@@ -185,7 +195,7 @@ class GameResults extends Component {
                             <div>Your Points: {this.state.userPoints}</div>
                             <div>PointAverage:{collection.pointAverage}</div>
                             <div>CorrectnessAverage: {collection.correctAnswerAverage}</div>
-                            <Table data={this.state.bestPlayer} keyField="Place">
+                            <Table data={this.state.bestPlayer} keyField="place">
                                 <Column header="Place" field="place" />
                                 <Column header="Player" field="userId" />
                                 <Column header="Points" field="points" />
@@ -207,11 +217,19 @@ class GameResults extends Component {
         }
         else {
             return (
-                <div>
-                    <h1>Game Results</h1>
-                    <div>{this.renderCards()}</div>
-                    <div>{this.renderBestPlayers()}</div>
-                    <button className="ui button" onClick={() => history.push(`/`)}>To List</button>
+            <div>
+                <Header />
+                <div className="ui container">
+                    <div className="ui segment" style={{borderColor:"Grey", borderWidth:"3px"}}>
+                        <h1>Game Results</h1>
+                        <div>{this.renderCards()}</div>
+                        <div>{this.renderBestPlayers()}</div>
+                        <div style={{marginTop:"20px"}}>
+                        <button className="ui button" onClick={() => history.push(`/`)}>Back to Mainpage</button>
+                        <button className="ui button" onClick={() => {history.push(`/collections/${this.state.collectionId}`)}}>Back to Gamemenu</button>
+                        </div>
+                    </div>
+                </div>
                 </div>
             )
         }
@@ -230,7 +248,8 @@ const mapDispatchToProps = {
     getCollection: getCollection,
     getUser,
     getCollections,
-    getCards
+    getCards,
+    setGuestToNull
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameResults);

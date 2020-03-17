@@ -5,12 +5,10 @@ export default function AnswerInput(props){
 
     const saveAnswer = (event) => {
         event.preventDefault();
-        console.log(answer);
         props.saveAnswer();
         setAnswer("");
     }
     const handleAnswerChange = (event) => {
-        console.log(event.target.value)
         event.preventDefault()
         props.handleAnswerChange(event.target.value);
         setAnswer(event.target.value)
@@ -19,8 +17,9 @@ export default function AnswerInput(props){
     return(
         <div>
          <form onSubmit={saveAnswer}>
-          <div className="ui input">
+          <div className="ui input" >
             <input
+                style={{width:"200px"}}
                 autoFocus
                 onChange={handleAnswerChange}
                 value={answer}

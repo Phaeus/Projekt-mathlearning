@@ -1,3 +1,10 @@
 #container{
     margin-top: 30px;
 }
+#creator{
+    height:30px
+}
+
+.countdown-flex{
+    display: flex;
+}

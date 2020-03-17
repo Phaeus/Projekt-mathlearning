@@ -50,11 +50,10 @@ class EditCollection extends Component {
 
     async onCollectionSubmit(cardArray, randomOrderBool, description) {
         const cardIds = this.setCardIds(cardArray);
-        console.log(cardIds)
         if(titleInputVali(this.state.collectionTitle) === null){
             this.props.updateCollection({title: this.state.collectionTitle, randomOrderBool, cardIdList:cardIds.newCardIds, creatorId:this.props.user.user.id, modus: this.state.modus, id: Number(this.props.match.params.id), description:description});
             this.props.updateCard({cardIds, cardArray});
-            history.push(`/`);
+            history.goBack();
         }
         else{
             this.setState({showValidation: true});
@@ -67,7 +66,6 @@ class EditCollection extends Component {
     }
      // hier ist ein problem
     setCardIds = (cardArray) => {
-        console.log(cardArray)
         let cardIds1= [];
         let cardIds2 = [];
          //IDs von edititierer Collection
@@ -82,7 +80,6 @@ class EditCollection extends Component {
         let newCardIds = this.props.collections.collection.cardIdList;
 
         for (let i = 0; i < cardArray.length; i++) {
-            console.log(cardIds1, cardIds2)
             cardIds1.push(cardArray[i].id)
         }
         cardIds2 = cardIds1;
@@ -101,18 +98,15 @@ class EditCollection extends Component {
             newEl[i] = lastCardId +1; lastCardId = lastCardId+1
             newCardIds.push(newEl[i])
         }
-        console.log(newCardIds)
         return {newCardIds, deletedEl};
     }
 
     handleModusChange = (event) => {
         event.preventDefault();
-        console.log(event.target.value)
         return this.setState({modus: event.target.value});
     }
 
     renderModusButtons(){
-        console.log(this.props.collections.collection.modus)
         return(
             <div>
                 <RadioButtonGroup 
@@ -160,14 +154,11 @@ class EditCollection extends Component {
 
     findLastId = () => {
         let lastId = -1;
-        console.log(this.props.cards.idsToValueArray)
         for (let i = 0; i < this.props.cards.idsToValueArray.length; i++) {
             if(this.props.cards.idsToValueArray[i].id > lastId){
                 lastId = this.props.cards.idsToValueArray[i].id;
             }
-            console.log(this.props.cards.idsToValueArray[i].id)
         }
-        console.log(lastId)
         return lastId
     }
     
@@ -180,7 +171,6 @@ class EditCollection extends Component {
             )
         }
         else{
-            console.log(this.props.cards);
             return(
                 <div>
                 <Header />
@@ -194,7 +184,6 @@ class EditCollection extends Component {
                         </div>
                     </ form>
                     {this.renderModusButtons()}
-                    {console.log(this.props.cards.idsToValueArray)}
                         <EditCardForm description={this.props.collections.collection.description} lastId={this.findLastId()} randomOrderBool={this.props.collections.collection.randomOrderBool} cardArray={this.props.cards.idsToValueArray} onSubmit={this.onCollectionSubmit} modus={this.state.modus} showValidation={this.state.showValidation}/>
                     </div>
                     </div>

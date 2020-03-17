@@ -9,7 +9,6 @@ const onTimeDisplayChange = (props, timeChecked) => {
 }
 const onTimeChange = (props, event) => {
     event.preventDefault();
-    console.log(event.target.value);
     props.onTimeChange(event.target.value);
 }
 
@@ -35,7 +34,7 @@ export default function CollectionConfig(props){
                 <div className="ui divider"/>
                 <div className="rendition-time">
                 <div className="random-label">
-                    Rendition Time
+                    Displaytime
                 </div>
                 <div className="ui toggle checkbox">
                   <input type="checkbox" checked={props.showTimebar} onChange={() => { onTimeDisplayChange(props, !props.showTimebar)}} />
@@ -68,7 +67,7 @@ export default function CollectionConfig(props){
         <div className="ui segment" id="config-box">
             <div className="renditon">
                 <div className="random-label">
-                Random rendition
+                Order
                 </div>
                 <div className="ui toggle checkbox">
                   <input type="checkbox" checked={randomChecked} onChange={() => { onRandomChange(props, !randomChecked); setRandomChecked(!randomChecked)}} />

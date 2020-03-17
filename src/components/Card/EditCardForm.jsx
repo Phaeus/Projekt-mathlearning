@@ -69,14 +69,12 @@ class CreateCardForm extends Component {
         if(this.state.cards === null){
             this.setState({cards: this.props.cardArray})
         }
-        console.log(this.state.cards, this.props.cardArray)
     }
 
     async componentDidMount(){
       if (this.props.cards.cardlist === null) {
         await this.props.getCards();
       }
-      console.log(this.state.randomOrderBool)
     }
 
     reorder = (list, startIndex, endIndex) => {
@@ -151,7 +149,6 @@ class CreateCardForm extends Component {
 
     renderAnswerValidation(answer){
       if(this.state.showAnswerValidation){
-        console.log("Halla")
         if(answerInputVali(answer) !== null){
           return(
             <div>
@@ -175,15 +172,12 @@ class CreateCardForm extends Component {
       if (!result.destination) {
         return;
       }
-      console.log(result.source.index,
-        result.destination.index)
       //ids müssen neu vergeben werden
       const items = this.reorder(
         this.state.cards,
         result.source.index,
         result.destination.index
       );
-      console.log("cards",this.state.cards,"hall",items)
       this.setState({
         cards:items,
       });
@@ -209,7 +203,6 @@ class CreateCardForm extends Component {
           }
         }
         if(submit){
-          console.log(this.state.cards)
           this.props.onSubmit(this.state.cards, this.state.randomOrderBool, this.state.description);
         }
     }
@@ -225,7 +218,6 @@ class CreateCardForm extends Component {
 
     findIndex = (id) => {
       const cards = this.state.cards;
-      console.log(cards)
       for (let i = 0; i < cards.length; i++) {
         if(cards[i].id === id){
           return i;
@@ -235,8 +227,6 @@ class CreateCardForm extends Component {
     }
 
     showRendition = () => {
-      console.log(this.state.selectedId)
-      console.log(this.state.cards)
       if(this.state.selectedId !== null){
         return this.state.cards[this.findIndex(this.state.selectedId)].showTimebar
       }

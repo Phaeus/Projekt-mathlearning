@@ -24,7 +24,7 @@ class CreateCardForm extends Component {
           showConfig:false,
           showQuestionValidation: false,
           showAnswerValidation: false,
-          descripton: "",
+          description: "",
           errors: false,
           addButtonDisabled:false,
           removeDisabled: false
@@ -77,7 +77,6 @@ class CreateCardForm extends Component {
 
     reorder = (list, startIndex, endIndex) => {
       const result = Array.from(list);
-      console.log(result, startIndex, endIndex)
       const [removed] = result.splice(startIndex, 1);
       result.splice(endIndex, 0, removed);
       
@@ -144,7 +143,6 @@ class CreateCardForm extends Component {
 
     renderAnswerValidation(answer){
       if(this.state.showAnswerValidation){
-        console.log("Halla")
         if(answerInputVali(answer) !== null){
           return(
             <div>
@@ -204,7 +202,7 @@ class CreateCardForm extends Component {
           }
         }
         if(submit){
-          this.props.onSubmit(this.state.cards, this.state.randomOrderBool, this.state.descripton);
+          this.props.onSubmit(this.state.cards, this.state.randomOrderBool, this.state.description);
         }
     }
 
@@ -224,10 +222,8 @@ class CreateCardForm extends Component {
 
     findIndex = (id) => {
       const cards = this.state.cards;
-      console.log(id)
       for (let i = 0; i < cards.length; i++) {
         if(cards[i].id === id){
-          console.log(i)
           return i;
         }
       }
@@ -235,7 +231,6 @@ class CreateCardForm extends Component {
     }
 
     showRendition = () => {
-      console.log(this.state.selectedId)
       if(this.state.selectedId !== null){
         return this.state.cards[this.findIndex(this.state.selectedId)].showTimebar
       }
@@ -343,7 +338,10 @@ class CreateCardForm extends Component {
                                 <div className="clear-segment" onClick={e => {this.setState({showFields:true, showConfig:true, selectedId: card.id})}}>
                                   {cardVali(this.state.cards.find(equa => equa.id === card.id).question, this.state.cards.find(equa => equa.id === card.id).answer) === null ?
                                   (
-                                    <MathJax math={"`"+this.state.cards.find(equa => equa.id === card.id).question+"`"} />  
+                                    <div>
+                                      <MathJax math={"`" + this.state.cards.find(equa => equa.id === card.id).question + "`"} />
+                                      {"`" + this.state.cards.find(equa => equa.id === card.id).question +"`"}
+                                    </div>
                                   ):(
                                     <div>{cardVali(this.state.cards.find(equa => equa.id === card.id).question, this.state.cards.find(equa => equa.id === card.id).answer).label}</div>
                                   )

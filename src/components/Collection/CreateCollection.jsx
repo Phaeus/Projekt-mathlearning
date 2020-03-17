@@ -46,8 +46,7 @@ class CreateCollection extends Component {
         const cardIds = this.setCardIds(cardArray);
         if(titleInputVali(this.state.collectionTitle) === null){
             await this.props.addCreatedCollection(this.props.collections.lastCollectionId+1);
-            console.log(cardArray)
-            await this.props.createCollection({title: this.state.collectionTitle, randomOrderBool, cardIdList:cardIds, creatorId:this.props.user.user.id, modus: this.state.modus, descrption:description});
+            await this.props.createCollection({title: this.state.collectionTitle, randomOrderBool, cardIdList:cardIds, creatorId:this.props.user.user.id, modus: this.state.modus, description:description});
             this.props.createCard(cardArray);
             history.push(`/`);
         }
@@ -62,7 +61,6 @@ class CreateCollection extends Component {
         for (let i = 1; i < cardArray.length+1; i++) {
             idList.push(lastId + i);
         }
-        console.log(idList);
         return idList;
     }
 
@@ -120,7 +118,6 @@ class CreateCollection extends Component {
             return <div/>
         }
         else{
-            console.log(this.props.cards);
             return(
                 <div>
                 <Header />

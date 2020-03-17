@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 
 import history from '../../history';
 import {createUser, checkAvailableUser, loginUser} from '../../actions';
+import Header from '../Header';
 
 class Signin extends Component{
     constructor(props){
@@ -16,7 +17,6 @@ class Signin extends Component{
 
     checkInput = (values) => {
         this.props.checkAvailableUser(values);
-        console.log(this.props.user.usernameAvailable)
         
         if(!this.props.user.usernameAvailable){
             this.setState({errors: "Username not available"})
@@ -34,13 +34,15 @@ class Signin extends Component{
     //https://jasonwatmore.com/post/2019/04/10/react-formik-form-validation-example
     render(){
         return(
-            <div style={{padding:"20px"}}>
+            <div><Header /> 
+            <div style={{textAlign:"center",padding:"200px"}}>
             <Formik
             initialValues={{username:'',password:'', retypePassword:""}}
             validationSchema={Yup.object().shape({
                 username: Yup.string()
                     .required('Username is required')
-                    .min(4, 'Username must be at least 4 characters'),
+                    .min(4, 'Username must be at least 4 characters')
+                    .max(20, 'Username with max 20 characters allowed'),
                 password: Yup.string()
                     .min(6, 'Password must be at least 6 characters')
                     .required('Password is required'),
@@ -51,13 +53,11 @@ class Signin extends Component{
             }
                 onSubmit={values => {
                     if(this.checkInput(values)){
-                        console.log("Signed in successfully");
                         this.loginUser(values.username, values.password)
-                        console.log(this.props.user);
                         history.goBack();
                     }
                     else{
-                        console.log("Password not typed in correctly again")
+                        //not typed in correctly
                     }
                 }}
             >
@@ -68,20 +68,25 @@ class Signin extends Component{
                     autoFocus
                     name="username"
                     type="username"
-                    placeholder="Username/Email"
+                    placeholder="Username"
                     />
+                    </div>
+                    <div>
                     {errors.username && touched.username?(
-                        <div>{errors.username}</div>
+                        <div className="error-message">{errors.username}</div>
                     ):null}
                     </div>
+                    
                     <div className="ui input">
                     <Field
                     name="password"
                     type="password"
                     placeholder="Password"
                     />
+                    </div>
+                    <div>
                     {errors.password && touched.password?(
-                        <div>{errors.password}</div>
+                        <div className="error-message">{errors.password}</div>
                     ):null}
                     </div>
                     <div className="ui input">
@@ -90,14 +95,19 @@ class Signin extends Component{
                         type="password"
                         placeholder="Confirm password"
                         />
+                        </div>
+                        <div>
                         {errors.confirmPassword && touched.confirmPassword?(
-                        <div>{errors.confirmPassword}</div>
+                        <div className="error-message">{errors.confirmPassword}</div>
                     ):null}
                     </div>
+                    <div>
                     <button className="ui button" type="submit">Sign in</button>
+                    </div>
                 </Form>
                 )}
             </Formik>
+        </div>
         </div>
         )
     }

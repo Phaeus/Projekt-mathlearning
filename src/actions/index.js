@@ -215,3 +215,10 @@ export const setGuestStats = (stats) => async dispatch => {
         payload:stats
     })
 }
+
+export const setGuestToNull = () => async dispatch => {
+    dispatch({
+        type:"SET_GUEST_TO_NULL",
+        payload:[]
+    })
+}

@@ -51,13 +51,11 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case 'GET_COLLECTIONS':
-      console.log(state);
-      return { ...state, collectionlist: action.payload };
+      return { ...state, collectionlist: state.collectionlist };
 
     case 'GET_COLLECTION':
       const id = parseInt(action.payload);
       const collection = state.collectionlist.find(t => t.id === id);
-      console.log(collection);
       return { ...state, collection: collection };
 
     case 'CREATE_COLLECTION':
@@ -86,7 +84,6 @@ export default (state = initialState, action) => {
       }
       let newList = state.collectionlist;
       newList.push(newCollection);
-      console.log(state)
       return { ...state, collectionlist: newList, lastCollectionId: state.lastCollectionId + 1, collectionCounter: state.collectionCounter + 1 }
     case 'GET_LAST_COLLECTION_ID':
       let lastId = 0;
@@ -98,7 +95,6 @@ export default (state = initialState, action) => {
       return { ...state, lastCollectionId: lastId }
 
     case 'UPDATE_COLLECTION':
-      console.log(action.payload)
       let updatedCollection = action.payload;
       if (action.payload.modus === "Countdownmodus") {
         updatedCollection = {
@@ -124,20 +120,16 @@ export default (state = initialState, action) => {
         }
       }
       updatedCollectionlist.splice(index, 1, updatedCollection);
-      console.log(updatedCollectionlist);
       return { ...state, collectionlist: updatedCollectionlist }
 
     case 'DELETE_COLLECTION':
       const deleteCollectionId = action.payload;
       let deletedCollectionList = state.collectionlist;
       deletedCollectionList = deletedCollectionList.filter(coll => coll.id !== deleteCollectionId);
-      console.log(deletedCollectionList)
       return { ...state, collectionlist: deletedCollectionList }
     
     case 'SET_COLLECTION_STATS':
-      console.log("Payload", action.payload)
       const stats = action.payload;
-      console.log("State", state)
       let statCollection = state.collectionlist.find(collection => collection.id === stats.collectionId);
       let correctAnswerAverage = statCollection.correctAnswerAverage;
       let playedBy = statCollection.playedBy;
@@ -201,8 +193,9 @@ export default (state = initialState, action) => {
         const maxTimepoints = 2000;
         let points = 0;
         let pointAverage = 0;
+        if(stats.wholeTime > 0){
         points = points + Math.round((stats.userTime / (stats.wholeTime * 1000)) * maxTimepoints);
-        console.log(stats.wholeTime, stats.userTime, points)
+        }
         for (let i = 0; i < stats.correctAnswerArray.length; i++) {
           if (stats.correctAnswerArray[i].correct === true) {
             correctCounter = correctCounter + 1;
@@ -244,7 +237,6 @@ export default (state = initialState, action) => {
         }
         newBestPlayers.pop()
         statCollection = { ...statCollection, correctAnswerAverage, bestPlayers: newBestPlayers, pointAverage}
-        console.log(newBestPlayers)
       }
       else{
         statCollection = { ...statCollection, correctAnswerAverage, pointAverage}
@@ -260,7 +252,6 @@ export default (state = initialState, action) => {
         }
       }
       nCollectionlist.splice(changeIndex, 1, statCollection);
-      console.log(nCollectionlist)
       return { ...state, collectionlist: nCollectionlist }
     default:
       return state;

@@ -30,7 +30,6 @@ class Collection extends Component {
     const { id } = this.props.match.params;
     this.setState({ collectionId: id });
     await this.props.getCollection(id);
-    console.log(this.props.collections)
     if (this.props.collections.collection.modus !== "Learningmodus") {
       this.setBestPlayers()
     }
@@ -59,13 +58,11 @@ class Collection extends Component {
   }
 
   getUsernameFromId = (id) => {
-    console.log(this.props.user)
     return this.props.user.userlist.find(user => user.id === id).username;
   }
 
   setBestPlayers = () => {
     const { bestPlayers } = this.props.collections.collection;
-    console.log(this.props.collections.collection)
     let bestPlayer = [];
     for (let i = 0; i < bestPlayers.length; i++) {
       if (bestPlayers[i].userId === null) {
@@ -85,7 +82,6 @@ class Collection extends Component {
         }
       }
     }
-    console.log(bestPlayer)
     this.setState({ bestPlayer })
   }
 
@@ -106,38 +102,54 @@ class Collection extends Component {
     return new Date(ms).toISOString().slice(11, -1);
   }
 
+  findCreator = (creatorId) => {
+    const creator = this.props.user.userlist.find(user => user.id === creatorId).username;
+    return creator;
+  }
+
   renderCollectionInfos() {
     const { collection } = this.props.collections;
     if (this.state.showButton) {
       return (
         <div>
           <h1 className="ui header">{collection.title}</h1>
-          <h2 className="ui secondary header">Kartenanzahl: {collection.cardIdList.length}</h2>
+          <div>
+          <h2 className="ui secondary header">Creator: {this.findCreator(collection.creatorId)}</h2>
           <div>{collection.description}</div>
-          <div>Played: {collection.player}</div>
-          <div>{collection.modus}</div>
+          </div>
           {collection.modus === "Timermodus" ? (
             <div>
-              <div>Timeaverage: {this.msToTime(collection.timeAverage)}</div>
-              <div>CorrectnessAverage: {collection.correctAnswerAverage}</div>
+              <div>Played: {collection.player}</div>
+              <div>{collection.modus}</div>
+              <div>Average of time: {this.msToTime(collection.timeAverage)}</div>
+              <div>Average of correct answers: {collection.correctAnswerAverage}</div>
               <Table data={this.state.bestPlayer} keyField="{collection.id}">
                 <Column header="Place" field="place" />
                 <Column header="Player" field="userId" />
                 <Column header="Time" field="time" />
               </Table>
             </div>
-          ) : (<div />)}
+          ) : (<div>
           {collection.modus === "Countdownmodus" ? (
             <div>
-              <div>Pointaverage: {collection.pointAverage}</div>
-               <div>CorrectnessAverage: {collection.correctAnswerAverage}</div>
+              <div>
+                <div>Player: {collection.player}</div>
+                <div>{collection.modus}</div>
+                <div>Average of points: {collection.pointAverage}</div>
+                <div>Average of correct answers: {collection.correctAnswerAverage}</div>
+               </div>
               <Table data={this.state.bestPlayer} keyField="g">
                 <Column header="Place" field="place" />
                 <Column header="Player" field="userId" />
                 <Column header="Points" field="points" />
               </Table>
             </div>
-          ) : (<div />)}
+          ) : (<div>
+              <div>Played: {collection.player}</div>
+              <div>{collection.modus}</div>
+          </div>)}
+          </div>
+          )}
         </div>
       )
     }
@@ -153,9 +165,11 @@ class Collection extends Component {
         <div>
           <Header />
           <div className="ui container" id="container">
+            <div className="ui segment" style={{borderColor:"grey", borderWidth:"3px"}}>
             {this.renderCollectionInfos()}
             {this.renderStartGame()}
-            <button className="ui button" onClick={() => { history.push(`/`) }}>Zurück zur Liste</button>
+            <button className="ui button" style={{marginTop:"20px"}}onClick={() => { history.push(`/`) }}>Back to Mainpage</button>
+            </div>
           </div>
         </div>
       );

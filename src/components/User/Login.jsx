@@ -1,81 +1,100 @@
-import React,{Component} from 'react';
-import {connect} from 'react-redux';
-import {Formik, Form, Field} from 'formik';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
+import './Login.css'
 
 import history from '../../history';
-import {checkUser, loginUser} from '../../actions';
+import { checkUser, loginUser } from '../../actions';
+import Header from '../Header';
 
-class Login extends Component{
-    constructor(props){
+class Login extends Component {
+    constructor(props) {
         super(props);
-        this.state ={}
-    }  
+        this.state = {}
+    }
 
-     checkUser(values){
+    checkUser(values) {
         this.props.checkUser(values.username, values.password);
         return this.props.user.loginSuccess;
     }
 
-    loginUser(username){
-        this.props.loginUser(username);
+    async loginUser(username) {
+         await this.props.loginUser(username);
     }
 
-    render(){
-        return(
-            <div style={{padding:"20px"}}>
-            <Formik
-            initialValues={{username:'',password:''}}
-            validationSchema={Yup.object().shape({
-                    username: Yup.string()
-                        .required('Username is required'),
-                    password: Yup.string()
-                        .required('Password is required'),
-                })
-            }
-                onSubmit={values => {
-                    if(this.checkUser(values)){
-                        console.log("Logged in successfully.");
-                        this.loginUser(values.username)
-                        console.log(this.props.user)
-                        history.goBack();
+    render() {
+        return (
+            <div>
+                <Header />
+            <div style={{ padding: "20px" }}>
+                
+                <Formik
+                    initialValues={{ username: '', password: '' }}
+                    validationSchema={Yup.object().shape({
+                        username: Yup.string()
+                            .required('Username is required'),
+                        password: Yup.string()
+                            .required('Password is required'),
+                    })
                     }
-                    else{
-                        return(<div>He</div>)
-                    }
-                }}
-            >
-                {({values, errors, touched, isValidating, isSubmitting}) => (
-                    <Form>
-                        <div className="ui input">
-                    <Field
-                    autoFocus
-                    name="username"
-                    type="username"
-                    placeholder="Username"
-                    />
-                    {errors.username && isSubmitting.username?(
-                        <div>{errors.username}</div>
-                    ):null}
-                    </div>
-                    <div className="ui input">
-                    <Field
-                        name="password"
-                        type="password"
-                        placeholder="Password"
-                    />
-                    {errors.password && isSubmitting.password?(
-                        <div>{errors.password}</div>
-                    ):null}
-                    </div>
-                    <button className="ui button" type="submit">Log in</button>
-                </Form>
-                )}
-            </Formik>
-        </div>
+                    onSubmit={values => {
+                        if (this.checkUser(values)) {
+                            this.loginUser(values.username)
+                            history.goBack();
+                        }
+                        else {
+                            return (<div>He</div>)
+                        }
+                    }}
+                >
+                    {({ values, errors, touched, isValidating, isSubmitting }) => (
+                        <Form >
+                            <div style={{textAlign:"center", paddingTop:"200px"}}>
+                                <div className="ui input">
+                                    <Field
+                                        autoFocus
+                                        name="username"
+                                        type="username"
+                                        placeholder="Username"
+                                    />
+                                    </div>
+                                    <div>
+                                    {errors.username && touched.username ? (
+                                        <div className="error-message">{errors.username}</div>
+                                    ) : null}
+                                    </div>
+                                
+                                <div>
+                                    <div className="ui input" id="pwField">
+                                        <Field
+                                        className="field"
+                                            name="password"
+                                            type="password"
+                                            placeholder="Password"
+                                        />
+                                        </div>
+                                        <div>
+                                        {errors.password && touched.password ? (
+                                            <div className="error-message">{errors.password}</div>
+                                        ) : null}
+                                        </div>
+                                    
+                                </div>
+                                <div>
+                                    <div>
+                                        <button className="ui button" type="submit">Log in</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </Form>
+                    )}
+                </Formik>
+            </div>
+            </div>
         )
     }
-            
+
 }
 const mapStateToProps = state => {
     return {
